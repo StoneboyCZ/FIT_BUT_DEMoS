@@ -21,10 +21,10 @@ numberOfEntries = len(files)
 
 print(numberOfEntries)
 data = {}
-data['zdroj'] = 'opava'
+data['zdroj'] = 'abmp'
 data['matriky'] = []
  
-with open("opava.json", 'w',encoding="utf-8") as f:
+with open("abmp.json", 'w',encoding="utf-8") as f:
     #f.write("""{
     #"zdroj": "opava",
     #"matriky": [""")
@@ -40,7 +40,14 @@ with open("opava.json", 'w',encoding="utf-8") as f:
         book = {}
 
         # obtain the information from the page
-        puvodce = re.findall(r'div class=\"labelFloat\">Původce[^>]*[^<]*[^>]*>([^<]*)',content)
+        puvodce = re.findall(r'span class="tabularLabel">\s+Fara/úřad:\s+</span>\s+<span class="tabularValue">([^<]*)',content)[0].strip()
+        signatura = re.findall(r'span class="tabularLabel">\s+Signatura:\s+</span>\s+<span class="tabularValue">([^<]*)',content)[0].strip()
+        obsahSvazku = re.findall(r'Obsahy:\s+</span>\s+[^>]*>(.+?(?=</span>))',content,flags=re.DOTALL)[0].replace('<br>',' ').replace('\n','').strip().replace(' ','').replace('; ;','|')
+        print(obsahSvazku)    
+
+        obsah = {}
+                        
+        '''
         signatura = re.findall(r'div class=\"labelFloat\">Signatura [^>]*[^<]*[^>]*>([^<]*)',content)
         invCislo = re.findall(r'div class=\"labelFloat\">Inventární [^>]*[^<]*[^>]*>([^<]*)',content)
         typMatriky = re.findall(r'div class=\"labelFloat\">Typ [^>]*[^<]*[^>]*>([^<]*)',content)
@@ -172,5 +179,5 @@ with open("opava.json", 'w',encoding="utf-8") as f:
     
     json.dump(data,f,indent=4,ensure_ascii=False)
     #f.write(']}')
-    
+    '''
 
