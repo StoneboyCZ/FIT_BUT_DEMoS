@@ -25,7 +25,7 @@ def getNextPage(s,url):
 
 from requests.adapters import HTTPAdapter
 cookies = dict(
-    JSESSIONID='66DFB9F125E94C5D544896AFB069A3B9'
+    JSESSIONID='1E8B1A4679E06229C6E4EBFDD27D90E1'
 )
 
 # creates a random number
@@ -61,10 +61,20 @@ for f in files:
         content = fi.read()
 
         # get all content links
-        links = re.findall(r'onclick="renderRowClasses.*?(?=" href)" href="([^"]*)',content)
+        links = re.findall(r'onclick="renderRowClasses.*?(?=" href)" href="([^"]*)">',content)
 
-        print(links)
-
+        for link in links:
+            url = base+link
+            
+            # download link
+            r = s.get(url,cookies=cookies)    
+            content = r.text
+    
+            id = link.split('/')[-1]
+            ifn = './'+dn_info+'/'+id+'.html'
+            
+            with open(ifn,'w',encoding="utf-8") as fii:
+                fii.write(content)                
 
 '''
 # download the webpage 
