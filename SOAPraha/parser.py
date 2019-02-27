@@ -18,36 +18,36 @@ import json
 base = 'http://ebadatelna.soapraha.cz'
 
 # number of files in the dn directory
-dn = 'html'
+dn = 'html-info'
 files = [f for f in os.listdir(dn) if os.path.isfile(os.path.join(dn,f))]
-numberOfEntries = len(files)
 
-# get the array of links
-
-
-print(numberOfEntries)
 data = {}
 data['zdroj'] = 'SOAPraha'
 data['matriky'] = []
  
-with open("soa.json", 'w',encoding="utf-8") as f:
+with open("soa.json", 'w',encoding="utf-8") as of :
     #f.write("""{
     #"zdroj": "opava",
     #"matriky": [""")
 
     #for pn in range(1,3):
-    for pn in range(1,numberOfEntries+1,1):
+    for fn in files:
         # load a file
-        fn = './'+dn+f'/{pn:03d}.html'
+        fn = './'+dn+'/'+fn
         print(fn)
-        htmlFile = open(fn, 'r',encoding='utf-8')
-        content = htmlFile.read()
+        with open(fn,'r',encoding="utf-8") as f:
+            content = f.read()
         
 
         book = {}
-        '''
         # obtain the information from the page
-        puvodce = re.findall(r'div class=\"labelFloat\">Původce[^>]*[^<]*[^>]*>([^<]*)',content)
+        puvodce = re.findall(r'Původce.*?(?=<span)<span>([^<]*)',content,re.DOTALL)[0]
+        jazyk = re.findall(r'Jazyk.*?(?=<div>)<div>([^<]*)',content,re.DOTALL)[0]
+        narozeni = list(re.findall(r'Narození / index.*?(?=<div>)<div>([^<]*).*?(?=<div>)<div>([^<]*)',content, re.DOTALL))
+        oddani = list(re.findall(r'Oddaní / index.*?(?=<div>)<div>([^<]*).*?(?=<div>)<div>([^<]*)',content, re.DOTALL))
+        zemreli = list(re.findall(r'Zemřelí / index.*?(?=<div>)<div>([^<]*).*?(?=<div>)<div>([^<]*)', content, re.DOTALL))
+        uzemniRozsah = re.findall(r'obecCastLabel">([^<]*)',content,re.DOTALL)
+        '''
         signatura = re.findall(r'div class=\"labelFloat\">Signatura [^>]*[^<]*[^>]*>([^<]*)',content)
         invCislo = re.findall(r'div class=\"labelFloat\">Inventární [^>]*[^<]*[^>]*>([^<]*)',content)
         typMatriky = re.findall(r'div class=\"labelFloat\">Typ [^>]*[^<]*[^>]*>([^<]*)',content)
@@ -59,10 +59,62 @@ with open("soa.json", 'w',encoding="utf-8") as f:
         uzemniRozsah = re.findall(r'<tr class="propojLok">\s*<[^>]*>([^<]*).*\s*</tr>\s*<tr>\s*.*?(?=va)[^>]*>(.*?)(?=</td)',content)
         poznamka = re.findall(r'div class="labelFloat">Poznámka:[^>]*[^<]*[^>]*>([^<]*)',content)
         '''
-       
-        htmlFile.close()
-    
-    json.dump(data,f,indent=4,ensure_ascii=False)
+
+
+
+        book['puvodce'] = puvodce
+
+        # jazyky
+        book['jazyky'] = None
+        if '---' not in jazyk:
+            book['jazyky'] = []
+            jazyky = jazyk.split('část')
+            jazyky = list(filter(None, jazyky))
+            for j in jazyky:
+                j = j.replace('a ','').replace(',','').strip()
+                book['jazyky'].append(j)
+
+        # obsah
+                print(narozeni)
+
+
+
+        # remove nbsp
+        #narozeni = [item.replace('&nbsp;','') for item in narozeni]
+        #oddani = [item.replace('&nbsp;','') for item in oddani]
+        #zemreli = [item.replace('&nbsp;','') for item in zemreli]
+
+        print(narozeni)
+        print(oddani)
+        print(zemreli)
+
+        book['obsah'] = {}
+        
+        
+         
+
+        # obce
+        book['obce'] = []
+        
+        nazvyAll = []
+        for uz in uzemniRozsah:
+            nazvy = uz.split('/')
+            nazvy = [item.strip() for item in nazvy]
+            nazvyAll.append(nazvy)
+
+        book['obce'] = nazvyAll
+
+
+        
+        #print(book['puvodce'])
+        #print(book['jazyky'])
+        #print(narozeni)
+        #print(oddani)
+        #print(zemreli)
+
+        data['matriky'].append(book)
+           
+    json.dump(data,of,indent=4,ensure_ascii=False)
     #f.write(']}')
     
 
