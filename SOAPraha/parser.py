@@ -6,6 +6,8 @@
 # I-N_I-Z_I-O_inv_c_124a_sig_Op_VII_13_1789-1799_Katerinky_025.jpg
 
 # <tr class="propojLok">\s*<[^>]*>([^<]*).*\s*</tr>\s*<tr>\s*.*?(?=va)[^>]*>(.*?)(?=</td)
+# TODO: importovat seznam z JSONu
+
 
 import random
 import time
@@ -25,6 +27,11 @@ data = {}
 data['zdroj'] = 'SOAPraha'
 data['matriky'] = []
  
+# array of images
+idn = 'json-img'
+files = [f for f in os.listdir(idn) if os.path.isfile(os.path.join(idn,f))]
+
+
 with open("soa.json", 'w',encoding="utf-8") as of :
     #f.write("""{
     #"zdroj": "opava",
@@ -43,9 +50,9 @@ with open("soa.json", 'w',encoding="utf-8") as of :
         # obtain the information from the page
         puvodce = re.findall(r'Původce.*?(?=<span)<span>([^<]*)',content,re.DOTALL)[0]
         jazyk = re.findall(r'Jazyk.*?(?=<div>)<div>([^<]*)',content,re.DOTALL)[0]
-        narozeni = list(re.findall(r'Narození / index.*?(?=<div>)<div>([^<]*).*?(?=<div>)<div>([^<]*)',content, re.DOTALL))
-        oddani = list(re.findall(r'Oddaní / index.*?(?=<div>)<div>([^<]*).*?(?=<div>)<div>([^<]*)',content, re.DOTALL))
-        zemreli = list(re.findall(r'Zemřelí / index.*?(?=<div>)<div>([^<]*).*?(?=<div>)<div>([^<]*)', content, re.DOTALL))
+        narozeni = list(re.findall(r'Narození / index.*?<div>([^<]*).*?<div>([^<]*)',content,re.DOTALL)[0])
+        oddani = list(re.findall(r'Oddaní / index.*?<div>([^<]*).*?<div>([^<]*)',content, re.DOTALL)[0])
+        zemreli = list(re.findall(r'Zemřelí / index.*?<div>([^<]*).*?<div>([^<]*)', content, re.DOTALL)[0])
         uzemniRozsah = re.findall(r'obecCastLabel">([^<]*)',content,re.DOTALL)
         '''
         signatura = re.findall(r'div class=\"labelFloat\">Signatura [^>]*[^<]*[^>]*>([^<]*)',content)
@@ -63,36 +70,76 @@ with open("soa.json", 'w',encoding="utf-8") as of :
 
 
         book['puvodce'] = puvodce
-
+        
+        
         # jazyky
-        book['jazyky'] = None
+        jazyky = []        
+        jazyky = jazyk.split('část')
+        jazyky = list(filter(None, jazyky))
+        for j in jazyky:
+            j = j.replace('a ','').replace(',','').strip()
+            jazyky.append(j)
+
         if '---' not in jazyk:
-            book['jazyky'] = []
-            jazyky = jazyk.split('část')
-            jazyky = list(filter(None, jazyky))
-            for j in jazyky:
-                j = j.replace('a ','').replace(',','').strip()
-                book['jazyky'].append(j)
+            book['jazyky'] = jazyky
 
         # obsah
-                print(narozeni)
-
-
-
-        # remove nbsp
-        #narozeni = [item.replace('&nbsp;','') for item in narozeni]
-        #oddani = [item.replace('&nbsp;','') for item in oddani]
-        #zemreli = [item.replace('&nbsp;','') for item in zemreli]
-
-        print(narozeni)
-        print(oddani)
-        print(zemreli)
-
         book['obsah'] = {}
-        
-        
-         
 
+        # remove spaces
+        narozeni = [item.replace('&nbsp;','') for item in narozeni]
+        oddani = [item.replace('&nbsp;','') for item in oddani]
+        zemreli = [item.replace('&nbsp;','') for item in zemreli]
+
+        #print(narozeni)
+        #print(oddani)
+        #print(zemreli)
+
+        for i, n in enumerate(narozeni):
+            #print(f'{i}:{n}')
+            item = {}
+            if '---' in n:
+                continue
+            
+            if i == 0:
+                #print(n)
+                date = n.split('-')
+                book['obsah']['Narození'] = {'od':date[0], 'do':date[1]}
+
+            if i == 1:
+                date = n.split('-')
+                book['obsah']['INDEX Narozených'] = {'od':date[0], 'do':date[1]}
+
+        for i, n in enumerate(oddani):
+            #print(f'{i}:{n}')
+            item = {}
+            if '---' in n:
+                continue
+            
+            if i == 0:
+                #print(n)
+                date = n.split('-')
+                book['obsah']['Oddaní'] = {'od':date[0], 'do':date[1]}
+
+            if i == 1:
+                date = n.split('-')
+                book['obsah']['INDEX Oddaných'] = {'od':date[0], 'do':date[1]}
+
+        for i, n in enumerate(zemreli):
+            #print(f'{i}:{n}')
+            item = {}
+            if '---' in n:
+                continue
+            
+            if i == 0:
+                #print(n)
+                date = n.split('-')
+                book['obsah']['Zemřelí'] = {'od':date[0], 'do':date[1]}
+
+            if i == 1:
+                date = n.split('-')
+                book['obsah']['INDEX Zemřelích'] = {'od':date[0], 'do':date[1]}  
+                      
         # obce
         book['obce'] = []
         
@@ -104,13 +151,8 @@ with open("soa.json", 'w',encoding="utf-8") as of :
 
         book['obce'] = nazvyAll
 
-
-        
-        #print(book['puvodce'])
-        #print(book['jazyky'])
-        #print(narozeni)
-        #print(oddani)
-        #print(zemreli)
+        # obrazky
+        #img_fn = './json-img/'+i+'.json'
 
         data['matriky'].append(book)
            
