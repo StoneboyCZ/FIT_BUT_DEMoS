@@ -28,8 +28,8 @@ data['zdroj'] = 'SOAPraha'
 data['matriky'] = []
  
 # array of images
-idn = 'json-img'
-files = [f for f in os.listdir(idn) if os.path.isfile(os.path.join(idn,f))]
+#idn = 'json-img'
+#files = [f for f in os.listdir(idn) if os.path.isfile(os.path.join(idn,f))]
 
 
 with open("soa.json", 'w',encoding="utf-8") as of :
@@ -40,6 +40,8 @@ with open("soa.json", 'w',encoding="utf-8") as of :
     #for pn in range(1,3):
     for fn in files:
         # load a file
+        id = fn.split('/')[-1].split('.')[0]
+        print(id)
         fn = './'+dn+'/'+fn
         print(fn)
         with open(fn,'r',encoding="utf-8") as f:
@@ -66,22 +68,19 @@ with open("soa.json", 'w',encoding="utf-8") as of :
         uzemniRozsah = re.findall(r'<tr class="propojLok">\s*<[^>]*>([^<]*).*\s*</tr>\s*<tr>\s*.*?(?=va)[^>]*>(.*?)(?=</td)',content)
         poznamka = re.findall(r'div class="labelFloat">Poznámka:[^>]*[^<]*[^>]*>([^<]*)',content)
         '''
-
-
-
         book['puvodce'] = puvodce
         
         
         # jazyky
-        jazyky = []        
+        jazykyOut = []        
         jazyky = jazyk.split('část')
         jazyky = list(filter(None, jazyky))
         for j in jazyky:
             j = j.replace('a ','').replace(',','').strip()
-            jazyky.append(j)
+            jazykyOut.append(j)
 
         if '---' not in jazyk:
-            book['jazyky'] = jazyky
+            book['jazyky'] = jazykyOut
 
         # obsah
         book['obsah'] = {}
@@ -152,7 +151,12 @@ with open("soa.json", 'w',encoding="utf-8") as of :
         book['obce'] = nazvyAll
 
         # obrazky
-        #img_fn = './json-img/'+i+'.json'
+        img_fn = './json-img/'+id+'.json'
+
+        if os.path.isfile(img_fn): 
+            with open(img_fn, 'r', encoding='utf-8') as img_f:
+                images = json.load(img_f)
+                book['snimky'] = images           
 
         data['matriky'].append(book)
            
