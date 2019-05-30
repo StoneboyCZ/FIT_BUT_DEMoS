@@ -25,7 +25,7 @@ def getNextPage(s,content):
 
 from requests.adapters import HTTPAdapter
 cookies = dict(
-    JSESSIONID='E758B23190402AEC82D50CBA7D2483F8'
+    JSESSIONID='FD0B5EA7B8D5CCB99F956E7130121202'
 )
 
 # creates a random number
@@ -38,7 +38,7 @@ s = requests.Session()
 s.mount('http://digi.archives.cz', HTTPAdapter(max_retries=20))
 
 # url to get -- TODO: first parameter of the script
-url = 'http://digi.archives.cz/da/PaginatorResult.action?rowTxt=13846&_sourcePage=0I14W5CbTAYe0lDIH5ltwK9zJjff3dI0xNmmzVtXcVktlxPicEy5pN01WoCGW5dyIRA8nVgFQPMNhHTRWx74eeYMRkuJDiHQdY6Lnw0gs68%3D&__fp=iUEnxL8i74Zi2tdZwxG3QNjFidJb4Q5COyd-h9j_NNNGsTd69cVjb7aGSI1VdT_Z'
+url = 'http://digi.archives.cz/da/VysledekBean.action?show=&_sourcePage=J9iWHLkyp5z4HhNGlq9mM6oqvvkYA-alEcnabTkYvDuUufdZS6ayHaGqORKEQgWjvu_j1cA1cj_9xOZPuJLUy5_njHgRzedHY0K3t3M2Yb8%3D&pagerCompStateId=PAGER_RESULT&xid=be8358d0-f13c-102f-8255-0050568c0263&entityType=10041&paginatorCompStateId=PAGINATOR_RESULT&rowPg=0'
 
 # download the webpage 
 r = s.get(url,cookies=cookies)  
@@ -49,25 +49,37 @@ content = r.text
 #matches = re.findall(r'Celkem[^:]*:[^\d]*([^<]*)',content)
 #print(matches[0].strip())
 #numberOfEntries = int(matches[0].strip().replace(' ',''))
-numberOfEntries = 15000
+numberOfEntries = 12565 
 
 
 dn = 'html'
+skip = False
 if not len(os.listdir(dn)) == numberOfEntries: # not all HTMLs are downloaded
+    skipIndex = 1
     for n in range(1,numberOfEntries+1,1):
         fn = './'+dn+f'/{n:05d}.html'
 
         if os.path.isfile(fn): # skip 
+            skip = True
             print(f'Skipping: {fn}')
+            skipIndex = n
             #content = getNextPage(s,content)
         else: # new file
             print(fn)
+            if skip:
+                # http://digi.archives.cz/da/PaginatorResult.action?rowTxt=100&_sourcePage=bKkSO0TO8RtI9RGPJPEB93qDqgiP3YIQgQwie3n9TJ9BZE3FphATgqDTR617KAFT8FB3j2wSKX57ZGWxGNct5rNv1LLCCOG4yp8lVlYDwNI%3D&__fp=MPjVUQf3i5IFDRc3twy2vUXNFwiB6s6MM4DjAFqfs-DngYMZtHs3-mkw002DWqEt
+                # http://digi.archives.cz/da/PaginatorResult.action?rowTxt=11492&_sourcePage=EZK_5C4HIqBn7-K-DY9IMaGW1utfeadQ6TliuekchMQQAADoWtW9Z9Cj5bh3uclGhR73lbNOZathrY7sKJ3yjMLYxtfFNy7P35SnGcxDyPU%3D&__fp=fSaqZKzFoJmTJONsGzZYi-j-Xrlla5xKz1C1IR9qiRsd0xeSepWZjI7XP4d6_0Nv
+                url = 'http://digi.archives.cz/da/PaginatorResult.action?rowTxt='+str(skipIndex+1)+'&_sourcePage=EZK_5C4HIqBn7-K-DY9IMaGW1utfeadQ6TliuekchMQQAADoWtW9Z9Cj5bh3uclGhR73lbNOZathrY7sKJ3yjMLYxtfFNy7P35SnGcxDyPU%3D&__fp=fSaqZKzFoJmTJONsGzZYi-j-Xrlla5xKz1C1IR9qiRsd0xeSepWZjI7XP4d6_0Nv'
+                r = s.get(url,cookies=cookies)  
+                content = r.text
+                skip = False
+
             with open(fn,'w',encoding="utf-8") as f:
                 #content = getNextPage(s,content)
                 snimky = re.findall(r'<div class="imageBlock">\s+<a href="([^"]*)"',content)
 
                 if len(snimky) != 0:
-                    fn_images = './'+dn+f'/{n:05d}_images.html'
+                    fn_images = './'+dn+f'/images/{n:05d}_images.html'
                     r = s.get('http://digi.archives.cz'+html.unescape(snimky[0]),cookies=cookies)    
                     content_images = r.text
 
