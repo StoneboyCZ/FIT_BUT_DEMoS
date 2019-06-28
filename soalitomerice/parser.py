@@ -146,11 +146,10 @@ with open("litomerice.json", 'w',encoding="utf-8") as f:
         # snimky
         
         # obsahuje matrika snimky?
-        ifn = './'+dn+f'/images/{pn:05d}_images.html'
+        ifn = './'+dn+f'/images/json/{pn:05d}_images.json'
         if os.path.exists(ifn):
             imagesFile = open(ifn, 'r',encoding='utf-8')
-            imContent = imagesFile.read()
-            
+            book['snimky'] = json.load(imagesFile)
             imagesFile.close()
 
         
