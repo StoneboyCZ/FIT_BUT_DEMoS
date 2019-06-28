@@ -19,17 +19,17 @@ with open(settings['inputFileName'],'r',encoding='utf-8') as f:
         if re.findall(r'- [\d]* -',l):
             pass
         
-        zaznamy = []
-        inUradOblast = False
+        inOblast = False
         if 'farní úřad' in l or 'stavovský úřad' in l:
             if '(' in l: # for malformated entries
                 l = l.split('(')[0]
-            inUradoblast = True
+            inOblast = True
             urad = {}
+
             #print(l)
-            #urad['nazev'] = l.split('úřad')[1][1:].strip()
-            #urad['typ'] = l.split(' ')[0]
-            #urad['umisteni'] = []
+            urad['nazev'] = l.split('úřad')[1][1:].strip()
+            urad['typ'] = l.split(' ')[0]
+            urad['umisteni'] = []
 
             #print(f"{urad['nazev']} {urad['typ']}")   
     
