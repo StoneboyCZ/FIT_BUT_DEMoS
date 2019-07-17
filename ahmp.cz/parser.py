@@ -30,7 +30,7 @@ with open("abmp.json", 'w',encoding="utf-8") as f:
     #"matriky": [""")
 
     #for pn in range(1,3):
-    for pn in range(1,numberOfEntries+1,1):
+    for pn in range(1,numberOfEntries,1):
         # load a file
         fn = './'+dn+f'/{pn:05d}.html'
         print(fn)
@@ -40,13 +40,44 @@ with open("abmp.json", 'w',encoding="utf-8") as f:
         book = {}
 
         # obtain the information from the page
-        puvodce = re.findall(r'span class="tabularLabel">\s+Fara/úřad:\s+</span>\s+<span class="tabularValue">([^<]*)',content)[0].strip()
-        signatura = re.findall(r'span class="tabularLabel">\s+Signatura:\s+</span>\s+<span class="tabularValue">([^<]*)',content)[0].strip()
-        obsahSvazku = re.findall(r'Obsahy:\s+</span>\s+[^>]*>(.+?(?=</span>))',content,flags=re.DOTALL)[0].replace('<br>',' ').replace('\n','').strip().replace(' ','').replace('; ;','|')
-        print(obsahSvazku)    
+        book['puvodce'] = re.findall(r'span class="tabularLabel">\s+Fara/úřad:\s+</span>\s+<span class="tabularValue">([^<]*)',content)[0].strip()
+        book['signatura'] = re.findall(r'span class="tabularLabel">\s+Signatura:\s+</span>\s+<span class="tabularValue">([^<]*)',content)[0].strip()
+        obsahSvazku = re.findall(r'Obsahy:\s+</span>\s+[^>]*>(.+?(?=</span>))',content,re.DOTALL)[0].replace('<br>',' ').replace('\n','').strip().replace(' ','').replace(';;','|').split('|')
+        #poznamka = re.findall(r'Poznámka.*?(?=">)">([^<]*)',content,re.DOTALL)[0]
 
         obsah = {}
-                        
+
+        for o in obsahSvazku:
+            #print(o)
+            if len(o) != 0:
+                o = reversed(o.split(';'))
+                od_do = {}
+                for p in o:
+                    if '-' in p:
+                        tmp = p.split('-')
+                        od_do = {'od':tmp[0], 'do':tmp[1]} 
+                    elif 'i' in p: # indexes
+                        if 'N' in p or len(p) == 1:
+                            obsah['INDEX Narozených'] = od_do
+                        elif 'O' in p or len(p) == 1:
+                            obsah['INDEX Oddaných'] = od_do
+                        elif 'Z' in p or len(p) == 1:
+                            obsah['INDEX Zemřelých'] = od_do  
+                    else:
+                        if 'N' in p:    
+                            obsah['Narození'] = od_do
+                        elif 'O' in p:
+                            obsah['Oddaní'] = od_do
+                        elif 'Z' in p:    
+                            obsah['Zemřelí'] = od_do    
+        book['obsah'] = obsah
+
+        idn = './'+dn+f'/images/{pn:05d}'
+        print(idn)
+        #if os.path.exists(ifn):
+        #    with open(ifn, 'r',encoding='utf-8') as iif:
+        #        imContent = iif.read()
+        #        images = 
         '''
         signatura = re.findall(r'div class=\"labelFloat\">Signatura [^>]*[^<]*[^>]*>([^<]*)',content)
         invCislo = re.findall(r'div class=\"labelFloat\">Inventární [^>]*[^<]*[^>]*>([^<]*)',content)
