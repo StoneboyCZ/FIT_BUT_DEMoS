@@ -7,6 +7,8 @@
 
 # <tr class="propojLok">\s*<[^>]*>([^<]*).*\s*</tr>\s*<tr>\s*.*?(?=va)[^>]*>(.*?)(?=</td)
 
+# http://images.ahmp.cz/mrimage/ahmp/proxy/cz/archives/CZ-321100010/NAD-156/dao/images/0060/8f8491b495f7b49d4b69e2c4ecef862f.jpg
+
 import random
 import time
 import re
