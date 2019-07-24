@@ -19,15 +19,21 @@ page = 'http://vademecum.soalitomerice.cz'
 def getNextPage(s,n):
     #nextPageMatches = re.findall(r'<div class=\"pageIco\">[^<]*<a href=\"([^\"]*)\"><i class=\"icon-forward3',content)
     #print('http://digi.archives.cz'+html.unescape(nextPageMatches[0]))
+   # time.sleep(3)
     url = 'http://vademecum.soalitomerice.cz/vademecum/VysledekBean.action?show=&_sourcePage=-TmQel2F93rn942T12DAF5Gbin71etvUHOrfCAM_YumJvj1SrzdaYDKTYoE5_LZScHm50gBE9NkRjdl8pajpKLEr7JaFtqDP6tmkqQrZ4Lk%3D&pagerCompStateId=PAGER_RESULT&xid=09ddd7cea03b9b8d%3A30bdd2c7%3A1201ea2ef5b%3A-7e0b&entityType=10041&paginatorCompStateId=PAGINATOR_RESULT&rowPg='+str(n)
     r = s.get(url,cookies=cookies)    
     content = r.text
+
+    
+
+    
+
     return content
 
 
 from requests.adapters import HTTPAdapter
 cookies = dict(
-    JSESSIONID='F660C59835309383AEA1E19AF7B8C5A5'
+    JSESSIONID='73E0176580326CFB6962AFEF15C39DD0'
 )
 
 # creates a random number
@@ -47,7 +53,7 @@ url = 'http://vademecum.soalitomerice.cz/vademecum/VysledekBean.action?show=&_so
 r = s.get(url,cookies=cookies)  
 content = r.text
 
-print(content)
+#print(content)
 
 # number of entries
 #matches = re.findall(r'Celkem[^:]*:[^\d]*([^<]*)',content)
@@ -84,15 +90,23 @@ if not len(os.listdir(dn)) == numberOfEntries: # not all HTMLs are downloaded
 
                 if len(snimky) != 0:
                     fn_images = './'+dn+f'/images/{n:05d}_images.html'
+                    #time.sleep(3)
                     r = s.get(page+html.unescape(snimky[0]),cookies=cookies)    
                     content_images = r.text
+                    error_images = re.findall(r'ErrorCode',content_images)
+                    while len(error_images) > 0:
+                        r = s.get(page+html.unescape(snimky[0]),cookies=cookies)    
+                        content_images = r.text
+                        error_images = re.findall(r'ErrorCode',content_images)    
 
                     with open(fn_images,'w',encoding="utf-8") as fi:
                         fi.write(content_images)
 
 
                 f.write(content)
-                #time.sleep(2)
-                content = getNextPage(s,n)
-
                 
+                content = getNextPage(s,n)
+                error = re.findall(r'ErrorCode',content)
+                while len(error) > 0:
+                    content = getNextPage(s,n)    
+                    error = re.findall(r'ErrorCode',content)

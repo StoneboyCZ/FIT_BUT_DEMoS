@@ -32,7 +32,7 @@ data['matriky'] = []
 #files = [f for f in os.listdir(idn) if os.path.isfile(os.path.join(idn,f))]
 
 
-with open("soa.json", 'w',encoding="utf-8") as of :
+with open("soaPraha.json", 'w',encoding="utf-8") as of :
     #f.write("""{
     #"zdroj": "opava",
     #"matriky": [""")
@@ -50,6 +50,7 @@ with open("soa.json", 'w',encoding="utf-8") as of :
 
         book = {}
         # obtain the information from the page
+        signatura = re.findall(r'mainNavigation-titleLink"><h1>([^<]*)',content,re.DOTALL)[0].replace(' ','_')
         puvodce = re.findall(r'Původce.*?(?=<span)<span>([^<]*)',content,re.DOTALL)[0]
         jazyk = re.findall(r'Jazyk.*?(?=<div>)<div>([^<]*)',content,re.DOTALL)[0]
         narozeni = list(re.findall(r'Narození / index.*?<div>([^<]*).*?<div>([^<]*)',content,re.DOTALL)[0])
@@ -69,8 +70,7 @@ with open("soa.json", 'w',encoding="utf-8") as of :
         poznamka = re.findall(r'div class="labelFloat">Poznámka:[^>]*[^<]*[^>]*>([^<]*)',content)
         '''
         book['puvodce'] = puvodce
-        
-        
+        book['signatura'] = signatura        
         # jazyky
         jazykyOut = []        
         jazyky = jazyk.split('část')
