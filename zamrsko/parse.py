@@ -13,18 +13,32 @@ with open(settings['inputFileName'],'r',encoding='utf-8') as f:
     fixed2 = re.sub(r'stavovský úřad',r'______\nstavovský úřad',fixed1)
     fixed3 = re.sub(r'okresní úřad',r'______\nokresní úřad',fixed2)
     fixed4 = re.sub(r'- [\d]* -',r'',fixed3)
+    fixed5 = re.sub(r'E v i d e n č n í   ú d a j e   o   f o n d u',r'______\nE v i d e n č n í   ú d a j e   o   f o n d u',fixed4)
+    fixed6 = re.sub(r'farní úřad: Mlýnický Dvůr',r'farní úřad: Mlýnický Dvůr\núzemní obvod:\n',fixed5)
+    fixed7 = re.sub(r'farní úřad: Moravský Karlov',r'farní úřad: Moravský Karlov\núzemní obvod:\n',fixed6)
 
-    allContent = re.findall(r'(farní|stavovský|okresní) úřad(.*?)(?=______)',fixed4,re.DOTALL)
+    allContent = re.findall(r'(farní|stavovský|okresní) úřad:([^\n]*)(.*?)(?=[\d]+ sign.)(.*?)(?=______)',fixed7,re.DOTALL)
 
-    
+    with open('fixed4.txt','w',encoding='utf-8') as of:
+        of.write(fixed6)
+
+
     for c in allContent:
+        #print(c)
         uloziste = {}
         uloziste['typ'] = c[0]
-        print(uloziste['typ'])
+        uloziste['misto'] = c[1].strip()
 
-        for l in c[1].split('\n'):
-            if 'územní obvod' in l:
-                print(l)
+        info = c[2].strip()
+        # uzemni obvod
+        obvod = re.findall(r'územní obvod[:]*([^:]*)$',info,flags=re.DOTALL|re.MULTILINE)[0].strip().split('\n')
+        uloziste['uzemni_obvod'] = []
+        for o in obvod:
+            uloziste['uzemni_obvod'].append(o)
+
+        # zbytek informaci o ulozisti
+
+
     """
     origContent = f.readlines()
 
