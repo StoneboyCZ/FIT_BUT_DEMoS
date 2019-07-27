@@ -14,7 +14,7 @@ page = 'http://digi.archives.cz'
 
 from requests.adapters import HTTPAdapter
 cookies = dict(
-    JSESSIONID='FA02EC9E628D282FB4E36F6281ED34A7'
+    JSESSIONID='B4E3218FFE857C3BF2F846339B07431B'
 )
 
 s = requests.Session()

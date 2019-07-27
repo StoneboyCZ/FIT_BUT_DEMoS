@@ -21,10 +21,10 @@ numberOfEntries = len(files)
 
 print(numberOfEntries)
 data = {}
-data['zdroj'] = 'opava'
+data['zdroj'] = 'opava-zao'
 data['matriky'] = []
  
-with open("opava.json", 'w',encoding="utf-8") as f:
+with open("opava-zao.json", 'w',encoding="utf-8") as f:
     #f.write("""{
     #"zdroj": "opava",
     #"matriky": [""")
@@ -144,23 +144,12 @@ with open("opava.json", 'w',encoding="utf-8") as f:
         # snimky
         
         # obsahuje matrika snimky?
-        ifn = './'+dn+f'/images/{pn:05d}_images.html'
+        ifn = f'./{dn}/images/json/{pn:05d}_images.json'
         if os.path.exists(ifn):
             imagesFile = open(ifn, 'r',encoding='utf-8')
-            imContent = imagesFile.read()
-            jsonString = re.findall(r'resultJSON = (.*?(?=};)})',imContent)
-            jsonString = jsonString[0]
-            j = json.loads(jsonString)
-            snimky = {}
-            snimky['jmeno'] = j['entity']['saveAs']
-            snimky['url'] = []
-            for entry in j['media']:
-                url = 'http://images.archives.cz/mrimage/matriky/proxy/'+entry['uri']
-                snimky['url'].append(url)
-            book['snimky'] = snimky
+            book['snimky'] = json.load(imagesFile)
             imagesFile.close()
 
-        
         #print(len(poznamka))
         if len(poznamka) != 0:
             book['poznamka'] = poznamka[0]
