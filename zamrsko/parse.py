@@ -7,6 +7,11 @@ import os
 settings = {}
 settings['inputFileName'] = 'input.txt'
 
+
+data = {}
+data['zdroj'] = 'zamrsko'
+data['matriky'] = []
+
 with open(settings['inputFileName'],'r',encoding='utf-8') as f:
     content = f.read()
     fixed1 = re.sub(r'farní úřad',r'______\nfarní úřad',content)
@@ -20,84 +25,86 @@ with open(settings['inputFileName'],'r',encoding='utf-8') as f:
     allContent = re.findall(r'(farní|stavovský|okresní) úřad:([^\n]*)(.*?)(?=[\d]+ sign.)(.*?)(?=______)',fixed7,re.DOTALL)
 
     with open('fixed4.txt','w',encoding='utf-8') as of:
-        of.write(fixed6)
-
+        of.write(fixed7)
 
     for c in allContent:
         #print(c)
-        uloziste = {}
-        uloziste['typ'] = c[0]
-        uloziste['misto'] = c[1].strip()
+        #uloziste = {}
+        #uloziste['typ'] = c[0]
+        #uloziste['misto'] = c[1].strip()
 
-        info = c[2].strip()
         # uzemni obvod
-        obvod = re.findall(r'územní obvod[:]*([^:]*)$',info,flags=re.DOTALL|re.MULTILINE)[0].strip().split('\n')
+        info = re.findall(r'územní obvod[:]*[^$]([^:]*^)(.*)',c[2],flags=re.DOTALL|re.MULTILINE)[0]
+        """
         uloziste['uzemni_obvod'] = []
         for o in obvod:
             uloziste['uzemni_obvod'].append(o)
-
-        # zbytek informaci o ulozisti
-
-
-    """
-    origContent = f.readlines()
-
-    #print(len(origContent))
-
-    # remove first page
-    contentWithoutFirstPage = origContent[65:]
-
-    # split the document into sections
-    oblasti = []
-    inOblast = False
-    for i,l in enumerate(contentWithoutFirstPage):
-        #print(l)
-        if re.findall(r'- [\d]* -',l):
-            pass
-        if 'farní úřad' in l or 'stavovský úřad' in l:
-
-            if not inOblast:
-                #print(l)
-                inOblast = True
-                #continue # skip to next line
-            # oblast.append(l)
-            else:
-
-
-        if inOblast:
-            #print(l)
-            oblast = [] 
-            
-            if 'farní úřad' in l or 'stavovský úřad' in l:
-                print(oblast)
-                # konec oblasti
-                inOblast = False
-                oblasti.append(oblast)
-            else:
-                #print(l)
-                oblast.append(l)    
-
-    print(oblasti)
-
-    """
-    """
-    for l in contentWithoutFirstPage:
-        if re.findall(r'- [\d]* -',l):
-            pass
+        """
+        # matriky
+        matriky = re.findall(r'([\d]+) sign\. (.*?)(?=index|matrika)([^\d]*)(\S*).*?územní rozsah: (.*?)\n^[\d+].*?fol.,([^\n]*)',c[3],flags=re.DOTALL|re.MULTILINE)
+        #print(c[3])
         
-        inOblast = False
-        if 'farní úřad' in l or 'stavovský úřad' in l:
-            if '(' in l: # for malformated entries
-                l = l.split('(')[0]
-            inOblastnn = True
-            urad = {}
 
-            #print(l)
-            urad['nazev'] = l.split('úřad')[1][1:].strip()
-            urad['typ'] = l.split(' ')[0]
-            urad['umisteni'] = []
+        for m in matriky:
+            #print(m[0])
+            matrika = {}
+            matrika['id'] = m[0].strip()
+            matrika['signatura'] = m[1].strip()
+            matrika['typ'] = c[0].strip()
+            matrika['puvodce'] = c[1].strip()
 
-            #print(f"{urad['nazev']} {urad['typ']}")   
-    """
+            # jazyky
+            jazyky = []
+            j = m[5].split(',')
 
+            for jj in j:
+                if 'čeština' in jj:
+                    jazyky.append('čeština')
+                elif 'němčina' in jj:
+                    jazyky.append('němčina')
+                elif 'latina' in jj:
+                    jazyky.append('latina')
+            
+            matrika['jazyky'] = jazyky
+            
+            tmp = m[3].split('-')
+            od_do = {}
+            if len(tmp) == 1:
+                od_do['od'] = tmp[0]
+                od_do['do'] = tmp[0]
+            else:
+                od_do['od'] = tmp[0]
+                od_do['do'] = tmp[1]
+            
+            obsah = {}
+            
+            o = m[2].strip().split(' ')
+            #print(o)
+            
+            for i,op in enumerate(o):
+                if 'matrika' in op:
+                    if 'N' in o[i+1]:
+                        obsah['Narození'] = od_do
+                    
+                    if 'O' in o[i+1]:
+                        obsah['Oddaní'] = od_do
+                    
+                    if 'Z' in o[i+1]:
+                        obsah['Zemřelí'] = od_do
+                elif 'index' in op:
+                    if 'N' in o[i+1]:
+                        obsah['INDEX Narozených'] = od_do
+                    if 'O' in o[i+1]:
+                        obsah['INDEX Zemřelých'] = od_do
+                    if 'Z' in o[i+1]:
+                        obsah['INDEX Oddaných'] = od_do 
+            
+            matrika['obsah'] = obsah
+            
+            obce = m[4].replace('\n','').split(',')
+            matrika['obce'] = obce
 
+            data['matriky'].append(matrika)
+
+with open('zamrsko.json','w',encoding='utf-8') as f:
+    json.dump(data,f,indent=4,ensure_ascii=False)           
