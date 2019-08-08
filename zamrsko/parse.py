@@ -9,7 +9,7 @@ settings['inputFileName'] = 'input.txt'
 
 
 data = {}
-data['zdroj'] = 'zamrsko'
+data['zdroj'] = 'zamrsk'
 data['matriky'] = []
 
 with open(settings['inputFileName'],'r',encoding='utf-8') as f:
@@ -102,9 +102,11 @@ with open(settings['inputFileName'],'r',encoding='utf-8') as f:
             matrika['obsah'] = obsah
             
             obce = m[4].replace('\n','').split(',')
+            obce = list(map(str.strip,obce))
+            
             matrika['obce'] = obce
 
             data['matriky'].append(matrika)
 
-with open('zamrsko.json','w',encoding='utf-8') as f:
+with open('zamrsk.json','w',encoding='utf-8') as f:
     json.dump(data,f,indent=4,ensure_ascii=False)           
