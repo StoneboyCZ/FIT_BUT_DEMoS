@@ -7,6 +7,7 @@ import random
 import time
 import re
 import os
+import csv
 
 cookies = dict(
     PHPSESSID='2i7nugtblavchjklt1es0077h0',
@@ -29,7 +30,15 @@ headers = {
     'Referer': 'http://actapulica.eu/hledej/'
     }
 
-f = range(1,2,1) # 4401 - 4406
+f = []
+with open('knihy.csv',newline='',encoding='utf-8') as csvfile:
+    data = csv.reader(csvfile)
+    for d in data:
+        f.append(d[0])
+
+print(f)
+
+
 
 # creates a random number
 random.seed() 
@@ -72,8 +81,6 @@ for pn in range(1,int(numOfPages)+1,1):
          
     for adress,numberOfPages in zip(matchesAdress,matchesNumberOfPages):
         print(adress[5])
-        
-        
         
         if int(adress[5]) in f:
             #sleepTime = 1
