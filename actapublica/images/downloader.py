@@ -29,7 +29,7 @@ headers = {
     'Referer': 'http://actapulica.eu/hledej/'
     }
 
-f = range(4401,4407,1) # 4401 - 4406
+f = range(1,2,1) # 4401 - 4406
 
 # creates a random number
 random.seed() 
@@ -39,13 +39,11 @@ s = requests.Session()
 # create a session object
 #s.mount('http://actapublica.eu', HTTPAdapter(max_retries=20))
 
-url = 'http://actapublica.eu'
+url = 'http://actapublica.eu/matriky/brno/brno/?pg=1'
 
 # download the webpage 
-r = s.get(url,headers=headers,cookies=cookies)    
+r = s.get(url,headers=headers,cookies=cookies)
 content = r.text
-
-print(content)
 
 # how many pages do we need to process? Two matches, same number
 matches = re.findall(r'Přejít na stranu číslo [^>]*> z celkem (\d*)',content)
@@ -63,8 +61,7 @@ for pn in range(1,int(numOfPages)+1,1):
 
     # find all rows on the page
     matchesAdress = re.findall(r'<td class=\"row1\"><a href=\"http://([^/]*)/([^/]*)/([^/]*)/([^/]*)/([^/]*).\" title=\"([^\"]*)',content)
-    print(matchesAdress)
-
+    
     # get the number of pages <td class=\"row1\">(\d*)</td>
     matchesNumberOfPages = re.findall(r'<td class=\"row1\">(\d*)</td>',content)
     #print(matchesNumberOfPages)
@@ -74,10 +71,14 @@ for pn in range(1,int(numOfPages)+1,1):
     matchesNumberOfPages = list(filter(None, matchesNumberOfPages))
          
     for adress,numberOfPages in zip(matchesAdress,matchesNumberOfPages):
-        if f in matchesAdress[5]:
+        print(adress[5])
+        
+        
+        
+        if int(adress[5]) in f:
             #sleepTime = 1
-            print(adress)
-            print(numberOfPages)
+            #print(adress)
+            #print(numberOfPages)
 
             dn = "./"+adress[5]
 
