@@ -82,7 +82,7 @@ for pn in range(1,int(numOfPages)+1,1):
     for adress,numberOfPages in zip(matchesAdress,matchesNumberOfPages):
         print(adress[5])
         
-        if int(adress[5]) in f:
+        if adress[5] in f:
             #sleepTime = 1
             #print(adress)
             #print(numberOfPages)
