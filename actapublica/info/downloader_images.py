@@ -14,12 +14,8 @@ import os
 
 from requests.adapters import HTTPAdapter
 
-def striplist(l):
-    return([x.strip() for x in l])
-
-
 cookies = {
-    'PHPSESSID':'bd96pff2r2d1jordam9a6e24s7',
+    'PHPSESSID':'asfdde6g564kdscfb2a85ul771',
 }
 
 proxies = {
@@ -54,21 +50,18 @@ for pn in range(1,int(numOfPages)+1,1):
         r = s.get(url,cookies=cookies, proxies=proxies)    
         content = r.text 
 
-    # matchesAdress[0] actapublica.eu
-    # matchesAdress[1] matriky
-    # matchesAdress[2] brno
-    # matchesAdress[3] detail
-    # matchesAdress[4] id
-    # matchesAdress[5] signatura
-    matchesAdress = re.findall(r'<td class=\"row1\"><a href=\"http://([^/]*)/([^/]*)/([^/]*)/([^/]*)/([^/]*).\" title=\"([^\"]*)',content)
+    # matchesAdress[0] id
+    # matchesAdress[1] signatura
+    # matchesAdress[2] pocet stranek
+    matchesAdress = re.findall(r'<td class="row1"><a href="http://actapublica\.eu/matriky/brno/detail/([^/]*)/" title="([^"]*)".*?row2"></td>.*?row1">([^<]*)',content,re.DOTALL)
     for m in matchesAdress:
-            signatura = m[5]
-            fn = './html/'+signatura+'.html'
-            if os.path.isfile(fn): 
+            signatura = m[1]
+            fn = './html_images/'+signatura+'.html'
+            if os.path.isfile(fn) or int(m[2]) == 0: 
                 continue
             else: 
                 with open(fn,'w',encoding='utf-8') as f:
-                    url = 'http://actapublica.eu/matriky/brno/detail/'+m[4]+'/'
+                    url = 'http://actapublica.eu/matriky/brno/prohlizec/'+m[0]+'/'
                     print(url)
                     time.sleep(2)
                     r = s.get(url,cookies=cookies, proxies=proxies)   

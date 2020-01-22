@@ -2,7 +2,7 @@ import os
 import hashlib
 
 base = 'g:/ACTAPUBLICA'
-subdirectories = [f.path for f in os.scandir(base) if f.is_dir() and '_' not in f.name ]  
+subdirectories = [f.path for f in os.scandir(base) if f.is_dir() and '_' not in f.name and 'opis' in f.name ]  
 
 for directory in subdirectories:
     print(directory)
