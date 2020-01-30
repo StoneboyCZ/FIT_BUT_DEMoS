@@ -1,0 +1,37 @@
+
+\chapter{Obsah priloženého CD}
+\begin{itemize}
+    \item {{\bf src}} - zdrojové súbory skriptu
+    \item{{\bf tex}} - zdrojové súbory pre vytvorenie výsledného PDF dokumentu
+    \item{{\bf php}} - súbory obsahujúce PHP verziu, ktorá bola použitá pre testovanie skriptu
+    \item{{\bf sql}} - SQL súbory pre vytvorenie a testovanie databázy
+\end{itemize}
+
+\chapter{Manuál}
+\label{manual}
+V tejto prílohe je popísaný návod na vytvorenie databázy a spustenie skriptu.
+\section {Vytvorenie databázy a jej prepojenie s PHP skriptom}
+Vytvorenie databázy je popísane v nasledujúcich krokoch: 
+\begin{itemize}
+    \item {{\bf 1.}} Určíme si server, na ktorom budeme chcieť databázu založiť (napríklad lokálny MySql server pomocou nástroja Xampp - https://www.apachefriends.org/download.html
+    \item {{\bf 2.}} Na danom serveri založíme novú databázu, do ktorej budeme chiceť ukladať dáta RÚIAN.
+    \item{{\bf 3.} Nad založenou databázou spustíme sql {\bf sql/db.sql} (cesta z koreňového adresára skriptu)}
+    \item{{\bf 4.} v súbore {\bf RuianDatabase.php}, ktorý je v koreňovom adresári skriptu vyplníme konštanty {\bf HOST}, {\bf DBNAME}, {\bf USER} a {\bf PASS} podľa konfigurácie serveru, na ktorom sme vytvorili databázu. Od tohto momentu je PHP skript prepojený s databázou.}
+\end{itemize}
+\section {Spustenie skriptu}
+Skript je nutné spúšťať s verziou PHP 5 a vyššou. Daná verzia PHP musí mať nainštalované rozšírenie, ktoré umožňuje použiť triedu {\bf PDO}. Skript je možné spúštať pomocou jedného z dvoch spôsobov: 
+\begin{itemize}
+    \item {{\bf Spustenie skriptu bez parametrov} - slúži pre prvotné naplnenie databázy a používa sa pri prvom kontakte s databázou. Príklad spustenia v operačnom systéme Linux: 
+    \begin{verbatim}
+        php Ruian.php
+    \end{verbatim}
+    }
+    \item{{\bf Spustenie skriptu s parametrom update} - služi pre aktualizáciu vyplnenej databázy a používa sa v prípade, keď chceme aktualizovať databázu o nové prvky v období od poslednej práce s databázou po súčasný dátum. Príklad spustenia v operačnom systéme Linux:
+     \begin{verbatim}
+        php -update Ruian.php
+    \end{verbatim}}
+\end{itemize}
+Po naplnení databázy prvkami RÚIAN môžme databázu otestovať pomocou ukážkových sql súborov umiestnených v priečinku {\bf sql} koreňového adresára skriptu.
+
+
+
