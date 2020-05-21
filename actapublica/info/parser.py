@@ -10,21 +10,62 @@ import time
 import re
 import os
 import json
+import requests
+import pyproj
+
+
+def loadJSON(fn):
+    with open(fn, 'r', encoding='utf-8') as f:
+        data = json.load(f)  
+
+        return data 
+
+def findInRUIAN(m,data):
+    for d in data['data']:
+        #print(f"{d}:{data['data'][d]}")
+        if data['data'][d]['jmeno'] == m:
+            return d
+    
+    return None 
+
+def downloadFromRUIAN(i,o):
+    if o: # jedna se o obec
+        url = 'https://vdp.cuzk.cz/vdp/ruian/obce/'+str(i)
+        r = requests.get(url).text
+        return r
+    else: # jedna se o cast obce
+        url = 'https://vdp.cuzk.cz/vdp/ruian/castiobce/'+str(i)
+        r = requests.get(url).text
+        return r
+
 
 dn = './html/'
 
+sjtsk = pyproj.Proj("+init=epsg:5514")
+wgs = pyproj.Proj("+init=epsg:4326")
+obce = loadJSON('obce.json')
+castiObci = loadJSON('castiObce.json')
+
 data = {}
 data['zdroj'] = 'actapublica'
+data['pocet'] = 0
 data['matriky'] = []
 
+
+
 for fn in os.listdir(dn):
-    print(fn)
+    print(dn+fn)
     
-    with open(fn, 'r', encoding='utf-8') as f:
+    with open(dn+fn, 'r', encoding='utf-8') as f:
         content = f.read()
 
         matrika = {}
 
+        data['pocet'] = data['pocet'] + 1
+
+        matches = re.findall(r'<h3>([^<]*)',content)
+        matrika['id'] = matches[0]
+        
         matches = re.findall(r'Původce[^(]*[^>]*>([^<]*)',content)
         matrika['typ'] = matches[0]
 
@@ -32,54 +73,42 @@ for fn in os.listdir(dn):
         matrika['okres'] = matches[0]
 
         ## municipality (obec)
+        """
         municipalities = {}
         matches = re.findall(r'Obce[^>]*>[^>]*>[^>]*>([^<]*)',content)
         # split by delimiter
         split = matches[0].split(',')
 
-        ## https://vdp.cuzk.cz/vdp/ruian/obce/vyhledej?vc.kod=&op.kod=&ok.kod=&pu.kod=&ob.nazev=Adamov&ob.statusKod=&ob.kod=&ohrada.id=&obg.sort=UZEMI&search=Vyhledat
-
         for m in split:
-            municipalities[m] = {}
             m = m.strip()
-            municipalities[m]['nazev'] = m
-
-
-            
-
+            municipalities[m] = {}
+        """
         # languages (jazyky)
-        languages = ET.SubElement(book,'jazyky')
+        matrika['jazyky'] = []
         matches = re.findall(r'Jazyk[^>]*>([^&]*|[^<]*)',content)
-
         # pre-processing
-
-        
         for lang in matches:
             # split the languages?
             splitList = lang.split('.')
             if len(splitList) > 1: # more languages 
                 splitList = list(filter(None, splitList))
-                striplist(splitList)
 
                 for sp in splitList:
-                    language = ET.SubElement(languages,'jazyk')
                     if sp == 'čes':                    
-                        language.text = 'čeština'
+                        matrika['jazyky'].append('čeština')
                     elif sp == 'něm':
-                        language.text = 'němčina'
+                        matrika['jazyky'].append('němčina')
                     elif sp == 'lat':
-                        language.text = 'latina'
+                        matrika['jazyky'].append('latina')
             else: # one language
-                language = ET.SubElement(languages,'jazyk')
-                language.text = str(lang)
+                matrika['jazyky'].append(str(lang))
 
         # origin (puvodce)
-        origin = ET.SubElement(book,'puvodce')
         matches = re.findall(r'Původce[^>(]*>([^>(]*)',content)
-        origin.set('jmeno',str(matches[0]).strip())
+        matrika['puvodce'] = str(matches[0]).strip()
 
         # municipality (obec)
-        municipalities = ET.SubElement(book,'obce')
+        matrika['obce'] = {}
         matches = re.findall(r'Obce[^>]*>[^>]*>[^>]*>([^<]*)',content)
 
         # split by delimiter
@@ -87,62 +116,65 @@ for fn in os.listdir(dn):
         #print(split)
 
         for m in split:
-            obec = ET.SubElement(municipalities,'obec')
             m = m.strip()
-            obec.text = str(m)
+            matrika['obce'][m] = {}
+
+            # find in ruian
+            obec = True
+            i = findInRUIAN(m,obce)
+            if i == None: # obec nenalezena, zkousime casti
+                i = findInRUIAN(m,castiObci)
+                obec = False
+            
+            matrika['obce'][m]['id'] = i
+
+            # download additional information from RUIAN
+            if i != None: 
+                ruian = downloadFromRUIAN(i,obec)
+                #print(m)    
+                print(f'{i} {obec}')
+                if 'nalezena' not in ruian:
+                    c = re.findall(r'Definiční bod Y: ([^ ]*) X: ([^<]*)',ruian)[0]
+                    
+
+                    if len(c) != 0:
+                        xx = c[1].replace(',','.')
+                        yy = c[0].replace(',','.')
+                        xx = '-'+xx
+                        yy = '-'+yy
+                        #print(xx)
+                        cc = pyproj.transform(sjtsk, wgs, float(yy), float(xx))
+                        matrika['obce'][m]['souradnice'] = {}
+                        matrika['obce'][m]['souradnice']['lat'] = cc[1]
+                        matrika['obce'][m]['souradnice']['lon'] = cc[0]
+                    
+
+            #print(pyproj.transform(sjtsk, wgs, float(c(1), float(c(0))))
+            #print(c)
+
 
         # \<td\>(\d*)...(\d*)
         # content (obsah kroniky)
         # pole, ktere obsahuje typy
         typesListNames = ['Narození','Oddaní','Zemřelí','INDEX Narozených','INDEX Oddaných','INDEX Zemřelých']
-        contentBook = ET.SubElement(book,'obsah')
+        matrika['obsah'] = {}
         matches = re.findall(r'\<td\>(\d*)...(\d*)',content) # all ranges
 
         #print(matches)
 
         for match,typeName in zip(matches,typesListNames):
             if match[0] and match[1]:
-                contentType = ET.SubElement(contentBook,'typ')
-                print(typeName)
-                print(match)
-                contentType.set('nazev',typeName)
-                contentTypeRange = ET.SubElement(contentType,'rozsah')
-                contentTypeRange.set('od',match[0])
-                contentTypeRange.set('do',match[1])        
+                
+                #print(typeName)
+                #print(match)
+                matrika['obsah']['typ'] = typeName
+                matrika['obsah']['rozsah'] = {}
+                matrika['obsah']['rozsah']['od'] = match[0]
+                matrika['obsah']['rozsah']['do'] = match[1]        
 
-        images = ET.SubElement(book,'snimky')
-        images.set('pocet',numberOfPages)
-        # download information and adresses of images associated with the book
+        data['matriky'].append(matrika) 
         
-        dn = "./"+book[5]
 
-        # make the appropriate directory to save images
-        if not os.path.exists(dn):
-            os.makedirs(dn)
-        
-        if int(numberOfPages) > 0:
-            for n in range(1,int(numberOfPages)+1,1):
-                index='{num:03d}'.format(num=n)
-                url = "http://"+adress[0]+"/"+adress[2]+"/"+adress[5]+"/cut/"+adress[5]+"-"+index+"-1-1.png"
-                print(url)
-                
-                # get information about the image
-                #im = s.get(url,cookies=cookies)    
 
-                image = ET.SubElement(images,'snimek')
-                #print(str(len(im.content)/1024))
-                #image.set('velikost',str(len(im.content)/1024))
-                image.text = url
-
-                #time.sleep(sleepTime)
-                
-                
-                ET.dump(book)
-
-                string = ET.tostring(book,encoding='unicode',pretty_print='true')
-                f.write(string)
-
-                time.sleep(sleepTime)
-            
-        f.write('</matriky>')
-
+with open ('actapublica.json','w',encoding='utf-8') as f:
+    json.dump(data, f, indent=4,ensure_ascii=False)
