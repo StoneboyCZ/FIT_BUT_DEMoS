@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:cz:isvs:ruian:schemas:SpravObvIntTypy:v1" xmlns:spi="urn:cz:isvs:ruian:schemas:SpravObvIntTypy:v1" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:base="urn:cz:isvs:ruian:schemas:BaseTypy:v1" xmlns:obi="urn:cz:isvs:ruian:schemas:ObecIntTypy:v1" xmlns:com="urn:cz:isvs:ruian:schemas:CommonTypy:v1" targetNamespace="urn:cz:isvs:ruian:schemas:SpravObvIntTypy:v1" elementFormDefault="qualified" version="1.3.0">
+	<xs:annotation>
+		<xs:documentation xml:lang="cs">Aplikační schéma SpravObvIntTypy obsahuje typy správniho obvodu.</xs:documentation>
+	</xs:annotation>
+	<xs:import namespace="urn:cz:isvs:ruian:schemas:CommonTypy:v1" schemaLocation="../../../ruian/xsd/typy/CommonTypy.xsd"/>
+	<xs:import namespace="urn:cz:isvs:ruian:schemas:ObecIntTypy:v1" schemaLocation="../../../ruian/xsd/prvky_int/ObecIntTypy.xsd"/>
+	<xs:import namespace="urn:cz:isvs:ruian:schemas:BaseTypy:v1" schemaLocation="../../../ruian/xsd/typy/BaseTypy.xsd"/>
+	<xs:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="../../../common/gml/3.2.1/gml.xsd"/>
+	<xs:complexType name="SpravObvPodminkaIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Podmínky výběru správního obvodu.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Kod" type="base:Kod3Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód hledaného správního obvodu.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nazev" type="base:Nazev32Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Název hledaného správního obvodu.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Obec" type="obi:ObecIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Podmínka na nadřazenou obec.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SpravObvPolozkyBaseIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Rozšířený seznam základních požadovaných údajů.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="SpravObvPolozkyIntGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="SpravObvPolozkyIntGroup">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Základní seznam požadovaných údajů.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="VsechnyInformace" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované všechny informace správního obvodu.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kod" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný kód správního obvodu.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nazev" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný název správního obvodu.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nespravny" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované nesprávnosti správního obvodu.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SpravniMomcKod" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný kód správního MOMC.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Obec" type="obi:ObecPolozkyBaseIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná obec.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			</xs:sequence>
+	</xs:group>
+	<xs:complexType name="SpravObvSeznamIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Výsledek vyhledání správního obvodu.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="SpravniObvod" type="SpravObvIntType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Vyhledané správní obvody.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CelkemZaznamu" type="xs:int" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Celkový počet záznamů daný podmínkou na vstupu bez omezení.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SpravObvIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Prvek Správní obvod se základními elementy a bez geometrie.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="SpravObvIntGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="SpravObvIntGroup">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Základní elementy prvku Správní obvod.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Kod" type="base:Kod3Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód správního obvodu.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nazev" type="base:Nazev32Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Název správního obvodu.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nespravny" type="com:NespravnyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Identifikátor nesprávnosti na prvku.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SpravniMomcKod" type="base:Kod6Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód správniho MOMC.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Obec" type="obi:ObecIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Nadřazená obec.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			</xs:sequence>
+	</xs:group>
+	<xs:complexType name="CtiSpravObvDotazIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Parametry dotazu na detaily správního obvodu.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Kod" type="base:Kod3Type" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód správního obvodu.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PozadovaneUdaje" type="SpravObvPolozkyIntType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Seznam požadovaných údajů.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SpravObvPolozkyIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Seznam požadovaných údajů.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="SpravObvPolozkyIntGroup" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="PlatiOd" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný začátek platnosti.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IdTransakce" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované ID transakce RUIAN.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GlobalniIdNavrhuZmeny" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované ID návrhu změny.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DefinicniBod" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná geometrie definičního bodu správního obvodu.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OriginalniHranice" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná originální geometrie hranice správního obvodu.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice1" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná generalizovaná geometrie hranice správního obvodu (stupeň generalizace 1).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice2" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná generalizovaná geometrie hranice správního obvodu (stupeň generalizace 2).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DatumVzniku" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="SpravObvGMLIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Prvek Správní obvod jako rozšíření gml:AbstractFeatureType.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:group ref="SpravObvIntGroup" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="PlatiOd" type="base:DatumCasType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Začátek platnosti.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="PlatiDo" type="base:DatumCasType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Konec platnosti.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="IdTransakce" type="com:IdTransakceType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">ID transakce v RUIAN.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="GlobalniIdNavrhuZmeny" type="com:IdNavrhuZmenyType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">ID návrhu změny v ISUI.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Geometrie" type="GeometrieSpravObvIntType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Geometrické údaje.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="NespravneUdaje" type="com:NespravnyUdajListType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Seznam nesprávnych referenčních údajú.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="DatumVzniku" type="base:DatumCasType" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="GeometrieSpravObvIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Geometrické údaje správního obvodu.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="DefinicniBod" type="gml:PointPropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Geometrie definičního bodu správního obvodu.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OriginalniHranice" type="gml:MultiSurfacePropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Originální geometrie hranice správního obvodu.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice1" type="gml:MultiSurfacePropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Generalizovaná geometrie hranice správní obvod (stupeň generalizace 1).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice2" type="gml:MultiSurfacePropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Generalizovaná geometrie hranice správní obvod (stupeň generalizace 2).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="VyhledejSpravObvDotazIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Parametry dotazu na vyhledání správního obvodu.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Podminka" type="SpravObvPodminkaIntType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Podmínky výběru.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PozadovaneUdaje" type="SpravObvPolozkyBaseIntType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované vyhledané údaje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Omezeni" type="com:OmezeniType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Omezení a třídění výběru.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

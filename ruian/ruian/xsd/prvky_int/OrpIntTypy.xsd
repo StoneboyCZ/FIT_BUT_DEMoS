@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:cz:isvs:ruian:schemas:OrpIntTypy:v1" xmlns:opi="urn:cz:isvs:ruian:schemas:OrpIntTypy:v1" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:com="urn:cz:isvs:ruian:schemas:CommonTypy:v1" xmlns:base="urn:cz:isvs:ruian:schemas:BaseTypy:v1" xmlns:vci="urn:cz:isvs:ruian:schemas:VuscIntTypy:v1" targetNamespace="urn:cz:isvs:ruian:schemas:OrpIntTypy:v1" elementFormDefault="qualified" version="1.3.0">
+	<xs:annotation>
+		<xs:documentation xml:lang="cs">Aplikační schéma OrpIntTypy obsahuje typy ORP.</xs:documentation>
+	</xs:annotation>
+	<xs:import namespace="urn:cz:isvs:ruian:schemas:VuscIntTypy:v1" schemaLocation="../../../ruian/xsd/prvky_int/VuscIntTypy.xsd"/>
+	<xs:import namespace="urn:cz:isvs:ruian:schemas:BaseTypy:v1" schemaLocation="../../../ruian/xsd/typy/BaseTypy.xsd"/>
+	<xs:import namespace="urn:cz:isvs:ruian:schemas:CommonTypy:v1" schemaLocation="../../../ruian/xsd/typy/CommonTypy.xsd"/>
+	<xs:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="../../../common/gml/3.2.1/gml.xsd"/>
+	<xs:complexType name="VyhledejOrpDotazIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Parametry dotazu na vyhledání ORP.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Podminka" type="OrpPodminkaIntType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Podmínky výběru.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PozadovaneUdaje" type="OrpPolozkyBaseIntType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované vyhledané údaje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Omezeni" type="com:OmezeniType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Omezení a třídění výběru.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="OrpPodminkaIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Podmínky výběru ORP.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Kod" type="base:Kod4Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód hledaného ORP.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nazev" type="base:Nazev48Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Název hledaného ORP.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Vusc" type="vci:VuscIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Podmínka na nadřazený VÚSC.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="OrpPolozkyBaseIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Rozšířený seznam základních požadovaných údajů.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="OrpPolozkyIntGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="OrpPolozkyIntGroup">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Základní seznam požadovaných údajů.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="VsechnyInformace" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované všechny informace ORP.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kod" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný kód ORP.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nazev" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný název ORP.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nespravny" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované nesprávnosti ORP.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SpravniObecKod" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný kód správní obce.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Vusc" type="vci:VuscPolozkyBaseIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný VÚSC.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			</xs:sequence>
+	</xs:group>
+	<xs:complexType name="OrpSeznamIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Výsledek vyhledání ORP.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Orp" type="OrpIntType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Vyhledané ORP.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CelkemZaznamu" type="xs:int" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Celkový počet záznamů daný podmínkou na vstupu bez omezení.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="OrpIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Prvek ORP se základními elementy a bez geometrie.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="OrpIntGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="OrpIntGroup">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Základní elementy prvku ORP.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Kod" type="base:Kod4Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód ORP.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nazev" type="base:Nazev48Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Název ORP.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nespravny" type="com:NespravnyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Identifikátor nesprávnosti na prvku.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="SpravniObecKod" type="base:Kod6Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód správni obce.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Vusc" type="vci:VuscIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Nadřazený VÚSC.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			</xs:sequence>
+	</xs:group>
+	<xs:complexType name="CtiOrpDotazIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Parametry dotazu na detaily ORP.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Kod" type="base:Kod4Type" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód ORP.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PozadovaneUdaje" type="OrpPolozkyIntType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Seznam požadovaných údajů.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="OrpPolozkyIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Seznam požadovaných údajů.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="OrpPolozkyIntGroup" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="PlatiOd" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný začátek platnosti.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IdTransakce" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované ID transakce RUIAN.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GlobalniIdNavrhuZmeny" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované ID návrhu změny.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DefinicniBod" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná geometrie definičního bodu ORP.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OriginalniHranice" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná originální geometrie hranice ORP.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice1" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná generalizovaná geometrie hranice ORP (stupeň generalizace 1).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice2" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná generalizovaná geometrie hranice ORP (stupeň generalizace 2).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice3" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná generalizovaná geometrie hranice ORP (stupeň generalizace 3).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice4" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná generalizovaná geometrie hranice ORP (stupeň generalizace 4).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DatumVzniku" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="OrpGMLIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Prvek ORP jako rozšíření gml:AbstractFeatureType.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:group ref="OrpIntGroup" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="PlatiOd" type="base:DatumCasType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Začátek platnosti.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="PlatiDo" type="base:DatumCasType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Konec platnosti.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="IdTransakce" type="com:IdTransakceType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">ID transakce v RUIAN.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="GlobalniIdNavrhuZmeny" type="com:IdNavrhuZmenyType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">ID návrhu změny v ISUI.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Geometrie" type="GeometrieOrpIntType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Geometrické údaje.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="NespravneUdaje" type="com:NespravnyUdajListType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Seznam nesprávnych referenčních údajú.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="DatumVzniku" type="base:DatumCasType" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="GeometrieOrpIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Geometrické údaje ORP.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="DefinicniBod" type="gml:MultiPointPropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Geometrie definičního bodu ORP.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OriginalniHranice" type="gml:MultiSurfacePropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Originální geometrie hranice ORP.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice1" type="gml:MultiSurfacePropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Generalizovaná geometrie hranice ORP (stupeň generalizace 1).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice2" type="gml:MultiSurfacePropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Generalizovaná geometrie hranice ORP (stupeň generalizace 2).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice3" type="gml:MultiSurfacePropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Generalizovaná geometrie hranice ORP (stupeň generalizace 3).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice4" type="gml:MultiSurfacePropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Generalizovaná geometrie hranice ORP (stupeň generalizace 4).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

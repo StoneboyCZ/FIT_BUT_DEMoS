@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+	xmlns:xlink="http://www.w3.org/1999/xlink"
+	targetNamespace="http://www.w3.org/1999/xlink" version="1.0">
+	
+	<annotation>
+		<documentation>Redirect to xlink on the Web</documentation>
+	</annotation>
+	
+	<include schemaLocation="http://www.w3.org/1999/xlink.xsd"/>
+
+</schema>

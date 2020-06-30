@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:cz:isvs:ruian:schemas:AdrMistoIntTypy:v1" xmlns:ami="urn:cz:isvs:ruian:schemas:AdrMistoIntTypy:v1" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:com="urn:cz:isvs:ruian:schemas:CommonTypy:v1" xmlns:base="urn:cz:isvs:ruian:schemas:BaseTypy:v1" xmlns:soi="urn:cz:isvs:ruian:schemas:StavObjIntTypy:v1" xmlns:uli="urn:cz:isvs:ruian:schemas:UliceIntTypy:v1" targetNamespace="urn:cz:isvs:ruian:schemas:AdrMistoIntTypy:v1" elementFormDefault="qualified" version="1.1.0">
+	<xs:annotation>
+		<xs:documentation xml:lang="cs">Aplikační schéma AdrMistoIntTypy obsahuje typy adresního místa.</xs:documentation>
+	</xs:annotation>
+	<xs:import namespace="urn:cz:isvs:ruian:schemas:UliceIntTypy:v1" schemaLocation="../../../ruian/xsd/prvky_int/UliceIntTypy.xsd"/>
+	<xs:import namespace="urn:cz:isvs:ruian:schemas:StavObjIntTypy:v1" schemaLocation="../../../ruian/xsd/prvky_int/StavObjIntTypy.xsd"/>
+	<xs:import namespace="urn:cz:isvs:ruian:schemas:BaseTypy:v1" schemaLocation="../../../ruian/xsd/typy/BaseTypy.xsd"/>
+	<xs:import namespace="urn:cz:isvs:ruian:schemas:CommonTypy:v1" schemaLocation="../../../ruian/xsd/typy/CommonTypy.xsd"/>
+	<xs:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="../../../common/gml/3.2.1/gml.xsd"/>
+	<xs:complexType name="VyhledejAdrMistoDotazIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Parametry dotazu na vyhledání adresního místa.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Podminka" type="AdrMistoPodminkaIntType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Podmínky výběru.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PozadovaneUdaje" type="AdrMistoPolozkyBaseIntType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované vyhledané údaje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Omezeni" type="com:OmezeniType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Omezení a třídění výběru.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AdrMistoPodminkaIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Podmínky výběru adresního místa.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Kod" type="base:Kod9Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód hledaného adresního místa.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CisloDomovni" type="com:CisloDomovniType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Podmínka na číslo domovní.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CisloOrientacni" type="com:CisloOrientacniType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Podmínka na číselnou část čísla orientačního.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CisloOrientacniPismeno" type="com:CisloOrientacniPismenoType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Podmínka na koncové písmeno čísla orientačního.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Psc" type="com:PscType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Podmínka na PSČ adresní pošty.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StavebniObjekt" type="soi:StavObjIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Podmínka na nadřazený stavební objekt.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Ulice" type="uli:UliceIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Podmínka na nadřazenou ulici.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VOKod" type="base:Kod6Type" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AdrMistoPolozkyBaseIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Rozšířený seznam základních požadovaných údajů.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="AdrMistoPolozkyIntGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="AdrMistoPolozkyIntGroup">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Základní seznam požadovaných údajů.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="VsechnyInformace" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované všechny informace adresního místa.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kod" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný kód adresního místa.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nespravny" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované nesprávnosti adresního místa.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CisloDomovni" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované číslo domovní.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CisloOrientacni" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované číslo orientační.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CisloOrientacniPismeno" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované koncové písmeno čísla orientačního.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Psc" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované PSČ adresní pošty.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StavebniObjekt" type="soi:StavObjPolozkyBaseIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný stavební objekt.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Ulice" type="uli:UlicePolozkyBaseIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná ulice.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VOKod" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+	</xs:group>
+	<xs:complexType name="AdrMistoSeznamIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Výsledek vyhledání adresního místa.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="AdresniMisto" type="AdrMistoIntType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Vyhledané adresní místa.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CelkemZaznamu" type="xs:int" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Celkový počet záznamů daný podmínkou na vstupu bez omezení.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AdrMistoIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Prvek Adresní místo se základními elementy.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="AdrMistoIntGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="AdrMistoIntGroup">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Základní elementy prvku Adresní místo.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Kod" type="base:Kod9Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód adresního místa.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nespravny" type="com:NespravnyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Identifikátor nesprávnosti na prvku.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CisloDomovni" type="com:CisloDomovniType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Číslo domovní.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CisloOrientacni" type="com:CisloOrientacniType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Číselná část čísla orientačního.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CisloOrientacniPismeno" type="com:CisloOrientacniPismenoType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Koncové písmeno čísla orientačního.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Psc" type="com:PscType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">PSČ adresní pošty.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="StavebniObjekt" type="soi:StavObjIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Nadřazený stavební objekt.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Ulice" type="uli:UliceIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Nadřazená ulice.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="VOKod" type="base:Kod6Type" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+	</xs:group>
+	<xs:complexType name="CtiAdrMistoDotazIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Parametry dotazu na detaily adresního místa.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Kod" type="base:Kod9Type" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód adresního místa.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PozadovaneUdaje" type="AdrMistoPolozkyIntType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Seznam požadovaných údajů.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AdrMistoPolozkyIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Seznam požadovaných údajů.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="AdrMistoPolozkyIntGroup" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="PlatiOd" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný začátek platnosti.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IdTransakce" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované ID transakce RUIAN.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GlobalniIdNavrhuZmeny" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované ID návrhu změny.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DefinicniBod" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná geometrie definičního bodu adresního místa.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AdrMistoGMLIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Prvek Adresní místo jako rozšíření gml:AbstractFeatureType.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:group ref="AdrMistoIntGroup" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="PlatiOd" type="base:DatumCasType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Začátek platnosti.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="PlatiDo" type="base:DatumCasType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Konec platnosti.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="IdTransakce" type="com:IdTransakceType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">ID transakce v RUIAN.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="GlobalniIdNavrhuZmeny" type="com:IdNavrhuZmenyType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">ID návrhu změny v ISUI.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Geometrie" type="GeometrieAdrMistoIntType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Geometrické údaje.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="NespravneUdaje" type="com:NespravnyUdajListType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Seznam nesprávnych referenčních údajú.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="GeometrieAdrMistoIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Geometrické údaje adresního místa.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="DefinicniBod" type="DefinicniBodAdrMistoIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Geometrie definičního bodu adresního místa.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DefinicniBodAdrMistoIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Definiční bod adresního místa.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="AdresniBod" type="gml:PointPropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Definiční bod typu Adresní bod.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Zachranka" type="gml:PointPropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Definiční bod typu Přístup pro záchrannou službu.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Hasici" type="gml:PointPropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Definiční bod typu Přístup pro hasiče.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

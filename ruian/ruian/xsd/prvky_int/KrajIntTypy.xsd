@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:cz:isvs:ruian:schemas:KrajIntTypy:v1" xmlns:kri="urn:cz:isvs:ruian:schemas:KrajIntTypy:v1" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:com="urn:cz:isvs:ruian:schemas:CommonTypy:v1" xmlns:base="urn:cz:isvs:ruian:schemas:BaseTypy:v1" xmlns:sti="urn:cz:isvs:ruian:schemas:StatIntTypy:v1" targetNamespace="urn:cz:isvs:ruian:schemas:KrajIntTypy:v1" elementFormDefault="qualified" version="1.3.0">
+	<xs:annotation>
+		<xs:documentation xml:lang="cs">Aplikační schéma KrajIntTypy obsahuje typy kraje.</xs:documentation>
+	</xs:annotation>
+	<xs:import namespace="urn:cz:isvs:ruian:schemas:StatIntTypy:v1" schemaLocation="../../../ruian/xsd/prvky_int/StatIntTypy.xsd"/>
+	<xs:import namespace="urn:cz:isvs:ruian:schemas:BaseTypy:v1" schemaLocation="../../../ruian/xsd/typy/BaseTypy.xsd"/>
+	<xs:import namespace="urn:cz:isvs:ruian:schemas:CommonTypy:v1" schemaLocation="../../../ruian/xsd/typy/CommonTypy.xsd"/>
+	<xs:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="../../../common/gml/3.2.1/gml.xsd"/>
+	<xs:complexType name="VyhledejKrajDotazIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Parametry dotazu na vyhledání kraje.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Podminka" type="KrajPodminkaIntType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Podmínky výběru.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PozadovaneUdaje" type="KrajPolozkyBaseIntType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované vyhledané údaje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Omezeni" type="com:OmezeniType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Omezení a třídění výběru.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="KrajPodminkaIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Podmínky výběru kraje.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Kod" type="base:Kod3Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód hledaného kraje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nazev" type="base:Nazev32Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Název hledaného kraje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Stat" type="sti:StatIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Podmínka na nadřazený stát.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="KrajPolozkyBaseIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Rozšířený seznam základních požadovaných údajů.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="KrajPolozkyIntGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="KrajPolozkyIntGroup">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Základní seznam požadovaných údajů.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="VsechnyInformace" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované všechny informace kraje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kod" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný kód kraje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nazev" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný název kraje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nespravny" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované nesprávnosti kraje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Stat" type="sti:StatPolozkyBaseIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný stát.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			</xs:sequence>
+	</xs:group>
+	<xs:complexType name="KrajSeznamIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Výsledek vyhledání kraje.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Kraj" type="KrajIntType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Vyhledané kraje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CelkemZaznamu" type="xs:int" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Celkový počet záznamů daný podmínkou na vstupu bez omezení.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="KrajIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Prvek Kraj se základními elementy a bez geometrie.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="KrajIntGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="KrajIntGroup">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Základní elementy prvku Kraj.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Kod" type="base:Kod3Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód kraje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nazev" type="base:Nazev32Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Název kraje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nespravny" type="com:NespravnyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Identifikátor nesprávnosti na prvku.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Stat" type="sti:StatIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Nadřazený stát.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			</xs:sequence>
+	</xs:group>
+	<xs:complexType name="CtiKrajDotazIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Parametry dotazu na detaily kraje.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Kod" type="base:Kod3Type" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód kraje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PozadovaneUdaje" type="KrajPolozkyIntType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Seznam požadovaných údajů.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="KrajPolozkyIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Seznam požadovaných údajů.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="KrajPolozkyIntGroup" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="PlatiOd" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný začátek platnosti.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IdTransakce" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované ID transakce RUIAN.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GlobalniIdNavrhuZmeny" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované ID návrhu změny.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DefinicniBod" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná geometrie definičního bodu kraje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OriginalniHranice" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná originální geometrie hranice kraje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice1" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná generalizovaná geometrie hranice kraje (stupeň generalizace 1).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice2" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná generalizovaná geometrie hranice kraje (stupeň generalizace 2).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice3" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná generalizovaná geometrie hranice kraje (stupeň generalizace 3).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice4" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná generalizovaná geometrie hranice kraje (stupeň generalizace 4).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice5" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná generalizovaná geometrie hranice kraje (stupeň generalizace 5).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DatumVzniku" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="KrajGMLIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Prvek Kraj jako rozšíření gml:AbstractFeatureType.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:group ref="KrajIntGroup" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="PlatiOd" type="base:DatumCasType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Začátek platnosti.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="PlatiDo" type="base:DatumCasType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Konec platnosti.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="IdTransakce" type="com:IdTransakceType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">ID transakce v RUIAN.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="GlobalniIdNavrhuZmeny" type="com:IdNavrhuZmenyType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">ID návrhu změny v ISUI.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Geometrie" type="GeometrieKrajIntType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Geometrické údaje.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="NespravneUdaje" type="com:NespravnyUdajListType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Seznam nesprávnych referenčních údajú.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="DatumVzniku" type="base:DatumCasType" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="GeometrieKrajIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Geometrické údaje kraje.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="DefinicniBod" type="gml:PointPropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Geometrie definičního bodu kraje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="OriginalniHranice" type="gml:MultiSurfacePropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Originální geometrie hranice kraje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice1" type="gml:MultiSurfacePropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Generalizovaná geometrie hranice kraje (stupeň generalizace 1).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice2" type="gml:MultiSurfacePropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Generalizovaná geometrie hranice kraje (stupeň generalizace 2).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice3" type="gml:MultiSurfacePropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Generalizovaná geometrie hranice kraje (stupeň generalizace 3).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice4" type="gml:MultiSurfacePropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Generalizovaná geometrie hranice kraje (stupeň generalizace 4).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GeneralizovaneHranice5" type="gml:MultiSurfacePropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Generalizovaná geometrie hranice kraje (stupeň generalizace 5).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

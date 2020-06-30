@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:cz:isvs:ruian:schemas:UliceIntTypy:v1" xmlns:uli="urn:cz:isvs:ruian:schemas:UliceIntTypy:v1" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:com="urn:cz:isvs:ruian:schemas:CommonTypy:v1" xmlns:base="urn:cz:isvs:ruian:schemas:BaseTypy:v1" xmlns:obi="urn:cz:isvs:ruian:schemas:ObecIntTypy:v1" targetNamespace="urn:cz:isvs:ruian:schemas:UliceIntTypy:v1" elementFormDefault="qualified" version="1.1.0">
+	<xs:annotation>
+		<xs:documentation xml:lang="cs">Aplikační schéma UliceIntTypy obsahuje typy ulice.</xs:documentation>
+	</xs:annotation>
+	<xs:import namespace="urn:cz:isvs:ruian:schemas:ObecIntTypy:v1" schemaLocation="../../../ruian/xsd/prvky_int/ObecIntTypy.xsd"/>
+	<xs:import namespace="urn:cz:isvs:ruian:schemas:BaseTypy:v1" schemaLocation="../../../ruian/xsd/typy/BaseTypy.xsd"/>
+	<xs:import namespace="urn:cz:isvs:ruian:schemas:CommonTypy:v1" schemaLocation="../../../ruian/xsd/typy/CommonTypy.xsd"/>
+	<xs:import namespace="http://www.opengis.net/gml/3.2" schemaLocation="../../../common/gml/3.2.1/gml.xsd"/>
+	<xs:complexType name="VyhledejUliceDotazIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Parametry dotazu na vyhledání ulice.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Podminka" type="UlicePodminkaIntType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Podmínky výběru.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PozadovaneUdaje" type="UlicePolozkyBaseIntType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované vyhledané údaje.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Omezeni" type="com:OmezeniType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Omezení a třídění výběru.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UlicePodminkaIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Podmínky výběru ulice.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Kod" type="base:Kod7Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód hledané ulice.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nazev" type="base:Nazev48Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Název hledané ulice.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Obec" type="obi:ObecIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Podmínka na nadřazenou obec.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UlicePolozkyBaseIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Rozšířený seznam základních požadovaných údajů.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="UlicePolozkyIntGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="UlicePolozkyIntGroup">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Základní seznam požadovaných údajů.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="VsechnyInformace" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované všechny informace ulice.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Kod" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný kód ulice.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nazev" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný název ulice.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nespravny" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované nesprávnosti ulice.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Obec" type="obi:ObecPolozkyBaseIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná obec.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			</xs:sequence>
+	</xs:group>
+	<xs:complexType name="UliceSeznamIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Výsledek vyhledání ulice.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Ulice" type="UliceIntType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Vyhledané ulice.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="CelkemZaznamu" type="xs:int" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Celkový počet záznamů daný podmínkou na vstupu bez omezení.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UliceIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Prvek Ulice se základními elementy a bez geometrie.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="UliceIntGroup" minOccurs="1" maxOccurs="1"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:group name="UliceIntGroup">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Základní elementy prvku Ulice.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Kod" type="base:Kod7Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód ulice.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nazev" type="base:Nazev48Type" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Název ulice.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Nespravny" type="com:NespravnyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Identifikátor nesprávnosti na prvku.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="Obec" type="obi:ObecIntType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Nadřazená obec.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			</xs:sequence>
+	</xs:group>
+	<xs:complexType name="CtiUliceDotazIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Parametry dotazu na detaily ulice.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Kod" type="base:Kod7Type" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Kód ulice.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="PozadovaneUdaje" type="UlicePolozkyIntType" minOccurs="1" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Seznam požadovaných údajů.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UlicePolozkyIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Seznam požadovaných údajů.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:group ref="UlicePolozkyIntGroup" minOccurs="1" maxOccurs="1"/>
+			<xs:element name="PlatiOd" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaný začátek platnosti.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="IdTransakce" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované ID transakce RUIAN.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="GlobalniIdNavrhuZmeny" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadované ID návrhu změny.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="DefinicniCara" type="com:PozadovanyUdajType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Požadovaná geometrie definiční čáry ulice.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="UliceGMLIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Prvek Ulice jako rozšíření gml:AbstractFeatureType.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="gml:AbstractFeatureType">
+				<xs:sequence>
+					<xs:group ref="UliceIntGroup" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="PlatiOd" type="base:DatumCasType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Začátek platnosti.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="PlatiDo" type="base:DatumCasType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Konec platnosti.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="IdTransakce" type="com:IdTransakceType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">ID transakce v RUIAN.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="GlobalniIdNavrhuZmeny" type="com:IdNavrhuZmenyType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">ID návrhu změny v ISUI.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="Geometrie" type="GeometrieUliceIntType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Geometrické údaje.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="NespravneUdaje" type="com:NespravnyUdajListType" minOccurs="0" maxOccurs="1">
+						<xs:annotation>
+							<xs:documentation xml:lang="cs">Seznam nesprávnych referenčních údajú.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="GeometrieUliceIntType">
+		<xs:annotation>
+			<xs:documentation xml:lang="cs">Geometrické údaje ulice.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="DefinicniCara" type="gml:MultiCurvePropertyType" minOccurs="0" maxOccurs="1">
+				<xs:annotation>
+					<xs:documentation xml:lang="cs">Geometrie definiční čáry ulice.</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>
