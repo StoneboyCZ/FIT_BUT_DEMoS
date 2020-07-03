@@ -1,0 +1,58 @@
+[
+    {
+        "id": "19",
+        "nazev": "Hlavní město Praha"
+    },
+    {
+        "id": "27",
+        "nazev": "Středočeský kraj"
+    },
+    {
+        "id": "35",
+        "nazev": "Jihočeský kraj"
+    },
+    {
+        "id": "43",
+        "nazev": "Plzeňský kraj"
+    },
+    {
+        "id": "51",
+        "nazev": "Karlovarský kraj"
+    },
+    {
+        "id": "60",
+        "nazev": "Ústecký kraj"
+    },
+    {
+        "id": "78",
+        "nazev": "Liberecký kraj"
+    },
+    {
+        "id": "86",
+        "nazev": "Královéhradecký kraj"
+    },
+    {
+        "id": "94",
+        "nazev": "Pardubický kraj"
+    },
+    {
+        "id": "108",
+        "nazev": "Kraj Vysočina"
+    },
+    {
+        "id": "116",
+        "nazev": "Jihomoravský kraj"
+    },
+    {
+        "id": "124",
+        "nazev": "Olomoucký kraj"
+    },
+    {
+        "id": "132",
+        "nazev": "Moravskoslezský kraj"
+    },
+    {
+        "id": "141",
+        "nazev": "Zlínský kraj"
+    }
+]
