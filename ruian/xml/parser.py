@@ -9,12 +9,6 @@ kraje = []
 okresy = []
 obce = []
 
-
-# obce
-obecSRozsirenouPusobnosti = 1
-obecSPoverenymObecnimUradem = 2
-obec = 3
-
 def toGPS(s):
     c = s.split(' ')
     cc = pyproj.transform(sjtsk, wgs, float(c[0]), float(c[1]))
@@ -68,35 +62,12 @@ for ch in children:
     if ch.tag == '{urn:cz:isvs:ruian:schemas:VuscIntTypy:v1}Kod':
         okres['kraj'] = ch.text
 
-# obce s rozsirenou pusobnosti
-data = root[1][5]
+# obce 
+data = root[1][7]
 children = data.iter()
 obec = {}
-obec['typ'] = obecSRozsirenouPusobnosti
 for ch in children:
-    #print(ch.tag)
-    if ch.tag == '{urn:cz:isvs:ruian:schemas:VymennyFormatTypy:v1}Orp':
-        if obec:
-            obce.append(obec)
-        obec = {}
-    if ch.tag == '{urn:cz:isvs:ruian:schemas:OrpIntTypy:v1}Kod':
-        obec['id'] = ch.text
-    if ch.tag == '{urn:cz:isvs:ruian:schemas:OrpIntTypy:v1}Nazev':
-        obec['nazev'] = ch.text
-    if ch.tag == '{urn:cz:isvs:ruian:schemas:VuscIntTypy:v1}Kod':
-        obec['kraj'] = ch.text
-    if ch.tag == '{http://www.opengis.net/gml/3.2}pos':
-        obec['pos'] = ''#toGPS(ch.text)
-
-print(len(obce))
-
-# obce s poverenym obecnim uradem
-data = root[1][6]
-children = data.iter()
-obec = {}
-obec['typ'] = obecSPoverenymObecnimUradem
-for ch in children:
-    #print(ch.tag)
+    print(ch.tag)
     if ch.tag == '{urn:cz:isvs:ruian:schemas:VymennyFormatTypy:v1}Pou':
         if obec:
             obce.append(obec)
@@ -108,4 +79,3 @@ for ch in children:
     if ch.tag == '{urn:cz:isvs:ruian:schemas:VuscIntTypy:v1}Kod':
         obec['kraj'] = ch.text
 
-print(len(obce))
