@@ -65,6 +65,8 @@ def parseMultivalueYear(text):
     
     return d
 
+characters = []
+
 out = {}
 out['zdroj'] = 'zao'
 out['pocet'] = 0
@@ -118,16 +120,29 @@ for ch in data:
                 matrika['datum_aktualizace_prilohy'] = i.text
 
         for s in subdata:
+            if s.attrib['nazev'] == 'indexProMatriky':
+                matrika['indexProMatriky'] = []
+                data = s.findall('matrika')
+                for d in data:
+                    matrika['indexProMatriky'].append(d.attrib['porCislo']) 
             if s.attrib['nazev'] == 'obsahy':
                 matrika['obsah'] = {}
                 data = s.findall('obsah')
                 for d in data:
+                    if d.attrib['charakter'] not in characters:
+                        characters.append(d.attrib['charakter'])
                     if d.attrib['charakter'] == 'narozeni':
                         matrika['obsah']['Narození'] = parseMultivalueYear(d.attrib['casRozsah'])
                     elif d.attrib['charakter'] == 'snatky':
                         matrika['obsah']['Oddaní'] = parseMultivalueYear(d.attrib['casRozsah'])    
                     elif d.attrib['charakter'] == 'umrti':
-                        matrika['obsah']['Zemřelí'] = parseMultivalueYear(d.attrib['casRozsah']) 
+                        matrika['obsah']['Zemřelí'] = parseMultivalueYear(d.attrib['casRozsah'])
+                    elif d.attrib['character'] == 'indexNarozeni':
+                        matrika['obsah']['INDEX Narozených'] = parseMultivalueYear(d.attrib['casRozsah'])
+                    elif d.attrib['charakter'] == 'indexUmrti':
+                        matrika['obsah']['INDEX Zemřelých'] = parseMultivalueYear(d.attrib['casRozsah'])
+                    elif d.attrib['charakter'] == 'indexSnatku':
+                        matrika['obsah']['INDEX Oddaných'] = parseMultivalueYear(d.attrib['casRozsah'])
             if s.attrib['nazev'] == 'propojLokality':
                 matrika['obce'] = []
                 
@@ -139,8 +154,7 @@ for ch in data:
 
                     for e in elements:
                         if e.tag == 'cas':
-                           print(e.text)
-                           obec = parseMultivalueYear(e.text)
+                           obec['casovyRozsah'] = parseMultivalueYear(e.text)
                         if e.tag == 'lokalita':
                             obec['umisteni'] = {}
                             for t in list(e):
@@ -155,7 +169,8 @@ for ch in data:
                                     obec['umisteni']['obec'] = t.text
                                 elif t.tag == 'castObce':
                                     obec['umisteni']['cast_obce'] = t.text
-                            print(obec)
+
+
                     matrika['obce'].append(obec)
 
 
@@ -163,4 +178,5 @@ for ch in data:
 
         out['matriky'].append(matrika)
 
-print(out['matriky'])
+print(characters)
+#print(out['matriky'])
