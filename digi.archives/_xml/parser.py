@@ -98,7 +98,7 @@ for ch in data:
             elif i.attrib['nazev'] == 'signPuv':
                 matrika['signatura_puvodce'] = i.text
             elif i.attrib['nazev'] == 'invCislo':
-                print(i.text)
+                #print(i.text)
                 matrika['invCislo'] = i.text
             elif i.attrib['nazev'] == 'casRozsahMin':
                 matrika['casovyRozsah']['min'] = i.text
@@ -137,7 +137,7 @@ for ch in data:
                         matrika['obsah']['Oddaní'] = parseMultivalueYear(d.attrib['casRozsah'])    
                     elif d.attrib['charakter'] == 'umrti':
                         matrika['obsah']['Zemřelí'] = parseMultivalueYear(d.attrib['casRozsah'])
-                    elif d.attrib['character'] == 'indexNarozeni':
+                    elif d.attrib['charakter'] == 'indexNarozeni':
                         matrika['obsah']['INDEX Narozených'] = parseMultivalueYear(d.attrib['casRozsah'])
                     elif d.attrib['charakter'] == 'indexUmrti':
                         matrika['obsah']['INDEX Zemřelých'] = parseMultivalueYear(d.attrib['casRozsah'])
@@ -172,11 +172,26 @@ for ch in data:
 
 
                     matrika['obce'].append(obec)
-
-
-
-
+        
+        if len(prilohy) != 0:
+            matrika['snimky'] = []
+            for p in prilohy:
+                #print(p)
+                snimek = {}
+                snimek['url'] = 'http://images.archives.cz/mrimage/matriky/proxy/'+p.attrib['rel-uri']
+                attributes = p.findall('info/pole')
+                for a in attributes:
+                    if a.attrib['nazev'] == 'uid':
+                        snimek['uid'] = a.text
+                    elif a.attrib['nazev'] == 'create_date':
+                        snimek['datum_vytvoreni'] = a.text
+                    elif a.attrib['nazev'] == 'lastwrite_date':
+                        snimek['datum_aktualizace'] = a.text
+                matrika['snimky'].append(snimek)
         out['matriky'].append(matrika)
 
-print(characters)
+#print(characters)
 #print(out['matriky'])
+
+with open('out.json','w', encoding='utf-8') as f:
+    json.dump(out, f, indent=2, ensure_ascii=False) 
