@@ -10,6 +10,21 @@ types = {
     'MISCELLANEA': 'jiná'
 }
 
+def loadJSON(fn):
+    with open(fn, 'r', encoding='utf-8') as f:
+        j = json.load(f)
+
+    return j
+
+def find(data,txt):
+    for d in data:
+        if d['nazev'] == txt:
+            return d['pos']
+
+    return None
+
+ruian_obce = loadJSON('ruian/obce.json')
+ruian_castiObci = loadJSON('ruian/castiObci.json')
 
 tree = etree.parse("zao_matriky.xml")
 root = tree.find('pomucka/kapitola')
@@ -157,6 +172,8 @@ for ch in data:
                            obec['casovyRozsah'] = parseMultivalueYear(e.text)
                         if e.tag == 'lokalita':
                             obec['umisteni'] = {}
+                            obec['typ'] = ''
+                            obec['varianty'] = []
                             for t in list(e):
                                 #print(t.tag)
                                 if t.tag == 'stat':
@@ -167,8 +184,22 @@ for ch in data:
                                     obec['umisteni']['okres'] = t.text
                                 elif t.tag == 'obec':
                                     obec['umisteni']['obec'] = t.text
+                                    obec['typ'] = 'obec'
                                 elif t.tag == 'castObce':
                                     obec['umisteni']['cast_obce'] = t.text
+                                    obec['typ'] = 'castObce'
+                                elif t.tag == 'varianta':
+                                    polozka1 = t.find('obec')
+                                    polozka2 = t.find('castObce')
+                                    if polozka1 != None:
+                                        obec['varianty'].append(polozka1.text)                                        
+                                    if polozka2 != None:
+                                        obec['varianty'].append(polozka2.text)
+                    if obec['typ'] == 'obec':
+                        obec['poloha'] = find(ruian_obce,obec['umisteni']['obec'])
+                    elif obec['typ'] == 'castObce':
+                        obec['poloha'] = find(ruian_castiObci, obec['umisteni']['cast_obce'] ) 
+
 
 
                     matrika['obce'].append(obec)
@@ -188,6 +219,7 @@ for ch in data:
                     elif a.attrib['nazev'] == 'lastwrite_date':
                         snimek['datum_aktualizace'] = a.text
                 matrika['snimky'].append(snimek)
+        out['pocet'] += 1
         out['matriky'].append(matrika)
 
 #print(characters)
