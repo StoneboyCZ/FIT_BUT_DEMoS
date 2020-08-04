@@ -1,5 +1,6 @@
 from lxml import etree
 import json
+import datetime
 
 types = {
     'CATHOLICA': 'katolická',
@@ -23,10 +24,12 @@ def find(data,txt):
 
     return None
 
+datetime_object = datetime.datetime.now()
+
 ruian_obce = loadJSON('ruian/obce.json')
 ruian_castiObci = loadJSON('ruian/castiObci.json')
 
-tree = etree.parse("zao_matriky.xml")
+tree = etree.parse("zao_matriky_20200725.xml")
 root = tree.find('pomucka/kapitola')
 
 # matriky
@@ -84,8 +87,12 @@ characters = []
 
 out = {}
 out['zdroj'] = 'zao'
+out['vytvoreno'] = str(datetime_object)
+out['vytvoreno_xml'] = tree.find('pomucka').attrib['cas-vytvoreni']
 out['pocet'] = 0
 out['matriky'] = []
+
+fn = out['vytvoreno_xml'].split('T')[0].replace('-','') + '.json'
 
 # kapitoly
 data = list(root)
@@ -225,5 +232,5 @@ for ch in data:
 #print(characters)
 #print(out['matriky'])
 
-with open('out.json','w', encoding='utf-8') as f:
+with open(fn,'w', encoding='utf-8') as f:
     json.dump(out, f, indent=2, ensure_ascii=False) 
