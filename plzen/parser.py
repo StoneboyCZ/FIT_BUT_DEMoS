@@ -7,21 +7,24 @@
 
 # <tr class="propojLok">\s*<[^>]*>([^<]*).*\s*</tr>\s*<tr>\s*.*?(?=va)[^>]*>(.*?)(?=</td)
 
-import random
-import time
 import re
 import os
-import math
-import html
 import json
+import datetime
+
 
 dn = 'html'
 files = [f for f in os.listdir(dn) if os.path.isfile(os.path.join(dn,f))]
 numberOfEntries = len(files)
 
 print(numberOfEntries)
+
+datetime_object = datetime.datetime.now()
 data = {}
 data['zdroj'] = 'plzen'
+data['vytvoreno'] = str(datetime_object)
+data['pocet'] = 0
+
 data['matriky'] = []
  
 with open("plzen.json", 'w',encoding="utf-8") as f:
@@ -117,7 +120,7 @@ with open("plzen.json", 'w',encoding="utf-8") as f:
             book['snimky'] = snimky
         
         data['matriky'].append(book)  
-                
+        data['pocet'] += 1            
     json.dump(data,f,indent=4,ensure_ascii=False)
     
 
