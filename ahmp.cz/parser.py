@@ -9,21 +9,23 @@
 
 # http://images.ahmp.cz/mrimage/ahmp/proxy/cz/archives/CZ-321100010/NAD-156/dao/images/0060/8f8491b495f7b49d4b69e2c4ecef862f.jpg
 
-import random
-import time
 import re
 import os
-import math
-import html
+import datetime
+
 import json
 
 dn = 'html'
 files = [f for f in os.listdir(dn) if os.path.isfile(os.path.join(dn,f))]
 numberOfEntries = len(files)
 
+datetime_object = datetime.datetime.now()
+
 print(numberOfEntries)
 data = {}
 data['zdroj'] = 'abmp'
+data['vytvoreno'] = str(datetime_object)
+data['pocet'] = 0
 data['matriky'] = []
  
 with open("abmp.json", 'w',encoding="utf-8") as f:
@@ -81,6 +83,6 @@ with open("abmp.json", 'w',encoding="utf-8") as f:
                 book['snimky'] = json.load(imagesFile)
 
         data['matriky'].append(book)
-
+        data['pocet']+= 1
     json.dump(data,f,indent=4,ensure_ascii=False)
     

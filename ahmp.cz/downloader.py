@@ -20,13 +20,21 @@ def getNextPage(s,content):
     #print(nextPageMatches)
     #print('http://digi.archives.cz'+html.unescape(nextPageMatches[0]))
     r = s.get('http://katalog.ahmp.cz'+html.unescape(nextPageMatches[0]),cookies=cookies)    
+    print(r.status_code)
     content = r.text
+    return content
+
+def getPage(s,url):
+    r = s.get(url,cookies=cookies)  
+    print(r.status_code)
+    content = r.text
+
     return content
 
 
 from requests.adapters import HTTPAdapter
 cookies = dict(
-    JSESSIONID='02A5A1413B44905DF86FA11C181C709F'
+    JSESSIONID='A9005BA2D03A13D6001ED4C91702F32C'
 )
 
 # creates a random number
@@ -39,11 +47,12 @@ s = requests.Session()
 s.mount('http://katalog.ahmp.cz', HTTPAdapter(max_retries=20))
 
 # url to get -- TODO: first parameter of the script
-url = 'http://katalog.ahmp.cz/pragapublica/PaginatorResult.action?_sourcePage=nrbkuxETn2FDOwJJ3UodTyPy5etS7KINCxwSLd_yL_Fo3hFc01YahjDF7xtwXPGtWI4R7zUFUFfQ9GQU6hIjEk_PSj2rx6F44h9BrgLOUxs%3D&row=0'
+lastDownloadedPage = 0
+
+url = 'http://katalog.ahmp.cz/pragapublica/PaginatorResult.action?_sourcePage=_Soo7SY1KU7aN2kJcRfXSuvpRWHeemBkd5Tw04odDCC7sA7E4pJ4g6QBDLEDR-f2RoVU5Odo8tl2IObum9cnapDUbDo8LooomQreazMxw_4%3D&row='+str(lastDownloadedPage)
 
 # download the webpage 
-r = s.get(url,cookies=cookies)  
-content = r.text
+content = getPage(s,url)
 
 
 # number of entries
@@ -57,22 +66,30 @@ dn = 'html'
 if not os.path.isdir(dn):
     os.mkdir('./'+dn)
 
-if not len(os.listdir(dn)) == numberOfEntries: # not all HTMLs are downloaded
+files = [f for f in os.listdir(dn) if os.path.isfile(os.path.join(dn,f))]
+
+if not len(files) == numberOfEntries: # not all HTMLs are downloaded
     for n in range(1,numberOfEntries+1,1):
         fn = './'+dn+f'/{n:05d}.html'
 
         if os.path.isfile(fn): # skip 
             print(f'Skipping: {fn}')
+            lastDownloadedPage = n
             #content = getNextPage(s,content)
         else: # new file
             print(fn)
             with open(fn,'w',encoding="utf-8") as f:
+                if lastDownloadedPage != 0:
+                    url = 'http://katalog.ahmp.cz/pragapublica/PaginatorResult.action?_sourcePage=_Soo7SY1KU7aN2kJcRfXSuvpRWHeemBkd5Tw04odDCC7sA7E4pJ4g6QBDLEDR-f2RoVU5Odo8tl2IObum9cnapDUbDo8LooomQreazMxw_4%3D&row='+str(lastDownloadedPage)
+                    content = getPage(s,url)
+                    lastDownloadedPage = 0
+            
                 #content = getNextPage(s,content)
                 snimky = re.findall(r'<div class="oneThumbBloc imageArea">\s+<a href="([^"]*)"',content)
 
                 if len(snimky) != 0:
-                    fn_images = './'+dn+f'/{n:05d}_images.html'
-                    r = s.get('http://katalog.ahmp.cz'+html.unescape(snimky[0]),cookies=cookies)    
+                    fn_images = './'+dn+'/images/'+f'{n:05d}_images.html'
+                    r = s.get('http://katalog.ahmp.cz'+html.unescape(snimky[0]),cookies=cookies)
                     content_images = r.text
 
                     with open(fn_images,'w',encoding="utf-8") as fi:

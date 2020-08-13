@@ -2,19 +2,16 @@
 # O • sig. 146/21 • 1881 - 1926 • Krásný Les
 
 import requests 
-import random
-import time
 import re
 import os
-import math
 import html
 import json
 
-page = 'http://vademecum.soalitomerice.cz'
+page = 'http://katalog.ahmp.cz'
 
 from requests.adapters import HTTPAdapter
 cookies = dict(
-    JSESSIONID='119B8569262FB7685773C7BB77091C62'
+    JSESSIONID='A9005BA2D03A13D6001ED4C91702F32C'
 )
 
 s = requests.Session()
