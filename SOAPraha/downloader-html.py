@@ -24,7 +24,7 @@ def getNextPage(s,url):
 
 from requests.adapters import HTTPAdapter
 cookies = dict(
-    JSESSIONID='66DFB9F125E94C5D544896AFB069A3B9'
+    JSESSIONID='2A5F67E902F6A0B2E460114873FF2372'
 )
 
 # creates a random number
@@ -39,10 +39,10 @@ s.mount('http://ebadatelna.soapraha.cz', HTTPAdapter(max_retries=20))
 base = 'http://ebadatelna.soapraha.cz'
 
 # url to get -- TODO: first parameter of the script
-url = base+'/pages/SearchMatrikaPage?13'
+url = base+'/pages/SearchMatrikaPage?2'
 
 # number of pages to be downloaded
-numberOfPages = 105
+numberOfPages = 107
 
 dn = 'html'
 

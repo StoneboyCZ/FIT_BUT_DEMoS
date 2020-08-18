@@ -7,14 +7,9 @@
 
 # <tr class="propojLok">\s*<[^>]*>([^<]*).*\s*</tr>\s*<tr>\s*.*?(?=va)[^>]*>(.*?)(?=</td)
 
-import random
-import time
-import re
-import os
-import lxml
 from lxml import etree
 import json
-
+import datetime
 
 tree = etree.parse('matriky.xml')
 root = tree.getroot()
@@ -80,6 +75,8 @@ matrikyXML = root.findall('.//{http://www.mvcr.cz/archivy/evidence-nad/matriky}m
 
 data = {}
 data['zdroj'] = 'trebon'
+data['vytvoreno'] = str(datetime.datetime.now())
+data['pocet'] = 0
 data['matriky'] = []
 
 for m in matrikyXML:
@@ -132,7 +129,8 @@ for m in matrikyXML:
             continue
     
     if not found:
-        data['matriky'].append(book)
+      data['pocet']+=1
+      data['matriky'].append(book)
 
 with open('trebon.json','w',encoding='utf-8') as f:
     json.dump(data,f,indent=4,ensure_ascii=False)
