@@ -6,10 +6,12 @@
 # https://digi.ceskearchivy.cz/DA?lang=cs&
 # xml generation: https://docs.python.org/3/library/xml.etree.elementtree.html#module-xml.etree.ElementTree
 
-import datetime
+import time
 import re
 import os
 import json
+import requests
+import pyproj
 
 
 def loadJSON(fn):
@@ -19,23 +21,37 @@ def loadJSON(fn):
         return data 
 
 def findInRUIAN(m,data):
-    for d in data:
+    for d in data['data']:
         #print(f"{d}:{data['data'][d]}")
-        if d['nazev'] == m:
+        if data['data'][d]['jmeno'] == m:
             return d
     
     return None 
 
+def downloadFromRUIAN(i,o):
+    if o: # jedna se o obec
+        url = 'https://vdp.cuzk.cz/vdp/ruian/obce/'+str(i)
+        r = requests.get(url).text
+        return r
+    else: # jedna se o cast obce
+        url = 'https://vdp.cuzk.cz/vdp/ruian/castiobce/'+str(i)
+        r = requests.get(url).text
+        return r
+
+
 dn = './html/'
 
-obce = loadJSON('ruian/obce.json')
-castiObci = loadJSON('ruian/castiObci.json')
+sjtsk = pyproj.Proj("+init=epsg:5514")
+wgs = pyproj.Proj("+init=epsg:4326")
+obce = loadJSON('obce.json')
+castiObci = loadJSON('castiObce.json')
 
 data = {}
 data['zdroj'] = 'actapublica'
-data['vytvoreno'] = str(datetime.datetime.now())
 data['pocet'] = 0
 data['matriky'] = []
+
+
 
 for fn in os.listdir(dn):
     print(dn+fn)
@@ -56,6 +72,17 @@ for fn in os.listdir(dn):
         matches = re.findall(r'Okres[^>]*>([^<]*)',content)
         matrika['okres'] = matches[0]
 
+        ## municipality (obec)
+        """
+        municipalities = {}
+        matches = re.findall(r'Obce[^>]*>[^>]*>[^>]*>([^<]*)',content)
+        # split by delimiter
+        split = matches[0].split(',')
+
+        for m in split:
+            m = m.strip()
+            municipalities[m] = {}
+        """
         # languages (jazyky)
         matrika['jazyky'] = []
         matches = re.findall(r'Jazyk[^>]*>([^&]*|[^<]*)',content)
@@ -101,6 +128,29 @@ for fn in os.listdir(dn):
             
             matrika['obce'][m]['id'] = i
 
+            # download additional information from RUIAN
+            if i != None: 
+                ruian = downloadFromRUIAN(i,obec)
+                #print(m)    
+                print(f'{i} {obec}')
+                if 'nalezena' not in ruian:
+                    c = re.findall(r'Definiční bod Y: ([^ ]*) X: ([^<]*)',ruian)[0]
+                    
+
+                    if len(c) != 0:
+                        xx = c[1].replace(',','.')
+                        yy = c[0].replace(',','.')
+                        xx = '-'+xx
+                        yy = '-'+yy
+                        #print(xx)
+                        cc = pyproj.transform(sjtsk, wgs, float(yy), float(xx))
+                        matrika['obce'][m]['souradnice'] = {}
+                        matrika['obce'][m]['souradnice']['lat'] = cc[1]
+                        matrika['obce'][m]['souradnice']['lon'] = cc[0]
+                    
+
+            #print(pyproj.transform(sjtsk, wgs, float(c(1), float(c(0))))
+            #print(c)
 
 
         # \<td\>(\d*)...(\d*)
