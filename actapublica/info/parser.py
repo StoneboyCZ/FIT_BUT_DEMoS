@@ -7,6 +7,7 @@
 # xml generation: https://docs.python.org/3/library/xml.etree.elementtree.html#module-xml.etree.ElementTree
 
 import datetime
+from json import load
 import re
 import os
 import json
@@ -101,8 +102,6 @@ for fn in os.listdir(dn):
             
             matrika['obce'][m]['id'] = i
 
-
-
         # \<td\>(\d*)...(\d*)
         # content (obsah kroniky)
         # pole, ktere obsahuje typy
@@ -122,6 +121,9 @@ for fn in os.listdir(dn):
                 matrika['obsah']['rozsah']['od'] = match[0]
                 matrika['obsah']['rozsah']['do'] = match[1]        
 
+        # parse additional data from json
+        json_info = loadJSON()
+        
         data['matriky'].append(matrika) 
         
 

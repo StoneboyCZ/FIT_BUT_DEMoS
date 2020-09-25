@@ -12,12 +12,12 @@ import time
 import re
 import os
 import json
+import datetime
 
 from requests.adapters import HTTPAdapter
-#from requests.models import json_dumps
 
 cookies = {
-    'PHPSESSID':'dib9vj1cj790m2vhs0gvpoqa46',
+    'PHPSESSID':'bi57v1rtvc1gjdpi7d2659qe57',
 }
 
 proxies = {
@@ -87,18 +87,21 @@ for pn in range(1,int(numOfPages)+1,1):
                     f.write(r.text)
 
     # images
-    matchesAdress = re.findall(r'<td class="row1"><a href=.*?title="([^"]*)".*?Obce: .*?title="([^"]*)">.*?row1">([^<]*)',content,re.DOTALL)
+    matchesAdress = re.findall(r'<td class="row1"><a href=.*?title="([^"]*)".*?row1">([^<]*)',content,re.DOTALL)
     #print(matchesAdress)
     for m in matchesAdress:
         signatura = m[0]
-        obce = m[1]
         numberOfImages = m[2]
         fn = './json/'+signatura+'.json'
         with open(fn, 'w', encoding='utf-8') as f:
             matrika = {}
             matrika['signatura'] = signatura
-            matrika['obce'] = obce
             matrika['numberOfImages'] = numberOfImages
             json.dump(matrika,f,ensure_ascii=False)
 
+
+with open('info.json','w',encoding='utf-8') as f:
+    info = {}
+    info['downloaded'] = str(datetime.datetime.now())
+    json.dump(info,f,ensure_ascii=False)
 
