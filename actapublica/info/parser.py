@@ -35,7 +35,9 @@ castiObci = loadJSON('ruian/castiObci.json')
 data = {}
 data['zdroj'] = 'actapublica'
 data['vytvoreno'] = str(datetime.datetime.now())
+data['stazeno'] = loadJSON('info.json')['downloaded']
 data['pocet'] = 0
+data['snimky_zaklad'] = 'http://actapublica.eu/brno/'
 data['matriky'] = []
 
 for fn in os.listdir(dn):
@@ -122,8 +124,17 @@ for fn in os.listdir(dn):
                 matrika['obsah']['rozsah']['do'] = match[1]        
 
         # parse additional data from json
-        json_info = loadJSON()
-        
+        json_info = loadJSON('json/'+matrika['id']+'.json')
+        matrika['snimky'] = []
+        #matrika['snimky']['pocet'] = int(json_info['numberOfImages'])
+
+        for i in range(1, int(json_info['numberOfImages'])+1,1):
+            index='{num:03d}'.format(num=i)
+            snimek = {}
+            snimek['url'] = matrika['id']+'/cut/'+matrika['id']+'-'+index+'-1-1.png'
+            matrika['snimky'].append(snimek)
+            #print(data['snimky_zaklad']+sn)
+
         data['matriky'].append(matrika) 
         
 

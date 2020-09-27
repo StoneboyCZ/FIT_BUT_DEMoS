@@ -91,7 +91,7 @@ for pn in range(1,int(numOfPages)+1,1):
     #print(matchesAdress)
     for m in matchesAdress:
         signatura = m[0]
-        numberOfImages = m[2]
+        numberOfImages = m[1]
         fn = './json/'+signatura+'.json'
         with open(fn, 'w', encoding='utf-8') as f:
             matrika = {}
