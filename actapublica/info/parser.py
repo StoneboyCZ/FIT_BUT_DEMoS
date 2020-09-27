@@ -102,7 +102,7 @@ for fn in os.listdir(dn):
                 i = findInRUIAN(m,castiObci)
                 obec = False
             
-            matrika['obce'][m]['id'] = i
+            matrika['obce'][m]['ruian   '] = i
 
         # \<td\>(\d*)...(\d*)
         # content (obsah kroniky)

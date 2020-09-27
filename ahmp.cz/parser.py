@@ -19,21 +19,14 @@ dn = 'html'
 files = [f for f in os.listdir(dn) if os.path.isfile(os.path.join(dn,f))]
 numberOfEntries = len(files)
 
-datetime_object = datetime.datetime.now()
-
 print(numberOfEntries)
 data = {}
 data['zdroj'] = 'abmp'
-data['vytvoreno'] = str(datetime_object)
+data['vytvoreno'] = str(datetime.datetime.now())
 data['pocet'] = 0
 data['matriky'] = []
  
 with open("abmp.json", 'w',encoding="utf-8") as f:
-    #f.write("""{
-    #"zdroj": "opava",
-    #"matriky": [""")
-
-    #for pn in range(1,3):
     for pn in range(1,numberOfEntries,1):
         # load a file
         fn = './'+dn+f'/{pn:05d}.html'

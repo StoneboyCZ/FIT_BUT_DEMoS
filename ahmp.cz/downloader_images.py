@@ -11,7 +11,7 @@ page = 'http://katalog.ahmp.cz'
 
 from requests.adapters import HTTPAdapter
 cookies = dict(
-    JSESSIONID='A9005BA2D03A13D6001ED4C91702F32C'
+    JSESSIONID='0AE4D5C9C02487121F22C8B2DF3A7BDC'
 )
 
 s = requests.Session()

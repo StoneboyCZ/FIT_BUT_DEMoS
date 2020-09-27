@@ -6,14 +6,11 @@
 # I-N_I-Z_I-O_inv_c_124a_sig_Op_VII_13_1789-1799_Katerinky_025.jpg
 
 import requests 
-import random
-import time
 import re
 import os
-import math
 import html
-
-#from lxml import etree as ET
+import datetime
+import json
 
 def getNextPage(s,content):
     nextPageMatches = re.findall(r'<div class=\"pageIco\">[^<]*<a href=\"([^\"]*)\"><i class=\"icon-forward3',content)
@@ -34,7 +31,7 @@ def getPage(s,url):
 
 from requests.adapters import HTTPAdapter
 cookies = dict(
-    JSESSIONID='A9005BA2D03A13D6001ED4C91702F32C'
+    JSESSIONID='0AE4D5C9C02487121F22C8B2DF3A7BDC'
 )
 
 # creates a random number
@@ -49,7 +46,7 @@ s.mount('http://katalog.ahmp.cz', HTTPAdapter(max_retries=20))
 # url to get -- TODO: first parameter of the script
 lastDownloadedPage = 0
 
-url = 'http://katalog.ahmp.cz/pragapublica/PaginatorResult.action?_sourcePage=_Soo7SY1KU7aN2kJcRfXSuvpRWHeemBkd5Tw04odDCC7sA7E4pJ4g6QBDLEDR-f2RoVU5Odo8tl2IObum9cnapDUbDo8LooomQreazMxw_4%3D&row='+str(lastDownloadedPage)
+url = 'http://katalog.ahmp.cz/pragapublica/VysledekBean.action?show=&_sourcePage=9fjqriTgqw888813s2IsQZJKFaPrh8264Ej9H8jdZdEpRjFcQZ8wXm74BO18vnlv-y0KU8UGNv3vL6rrhq3OJHUWlfDadAppsm4r_N2IO2E%3D&row'+str(lastDownloadedPage)
 
 # download the webpage 
 content = getPage(s,url)
@@ -80,7 +77,7 @@ if not len(files) == numberOfEntries: # not all HTMLs are downloaded
             print(fn)
             with open(fn,'w',encoding="utf-8") as f:
                 if lastDownloadedPage != 0:
-                    url = 'http://katalog.ahmp.cz/pragapublica/PaginatorResult.action?_sourcePage=_Soo7SY1KU7aN2kJcRfXSuvpRWHeemBkd5Tw04odDCC7sA7E4pJ4g6QBDLEDR-f2RoVU5Odo8tl2IObum9cnapDUbDo8LooomQreazMxw_4%3D&row='+str(lastDownloadedPage)
+                    url = 'http://katalog.ahmp.cz/pragapublica/VysledekBean.action?show=&_sourcePage=9fjqriTgqw888813s2IsQZJKFaPrh8264Ej9H8jdZdEpRjFcQZ8wXm74BO18vnlv-y0KU8UGNv3vL6rrhq3OJHUWlfDadAppsm4r_N2IO2E%3D&row'+str(lastDownloadedPage)
                     content = getPage(s,url)
                     lastDownloadedPage = 0
             
@@ -101,3 +98,8 @@ if not len(files) == numberOfEntries: # not all HTMLs are downloaded
                 content = getNextPage(s,content)
 
                 
+
+with open('info.json','w',encoding='utf-8') as f:
+    info = {}
+    info['downloaded'] = str(datetime.datetime.now())
+    json.dump(info,f,ensure_ascii=False)

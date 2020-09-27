@@ -20,7 +20,7 @@ def loadJSON(fn):
 def find(data,txt):
     for d in data:
         if d['nazev'] == txt:
-            return d['pos']
+            return d
 
     return None
 
@@ -29,33 +29,11 @@ datetime_object = datetime.datetime.now()
 ruian_obce = loadJSON('ruian/obce.json')
 ruian_castiObci = loadJSON('ruian/castiObci.json')
 
-tree = etree.parse("zao_matriky_20200725.xml")
+tree = etree.parse("zao_matriky_2.xml")
 root = tree.find('pomucka/kapitola')
 
 # matriky
 #data = root[0]
-
-""" types = []
-test = tree.findall('.//pole[@nazev="typyMatriky"]')
-for t in test:
-    arr = []
-    #if type(t.text) != str:
-    #    print(type(t.text))
-
-    if type(t.text) != str:
-        continue
-    elif ',' in t.text:
-        arr = t.text.split(',')
-        arr = list(map(str.strip,arr))
-    else:
-        arr.append(t.text)
-    
-    for a in arr:
-        if a not in types:
-            types.append(a) 
-
-print(types)
-"""
 
 def parseMultivalue(text):
     seznam = []
@@ -89,6 +67,7 @@ out = {}
 out['zdroj'] = 'zao'
 out['vytvoreno'] = str(datetime_object)
 out['vytvoreno_xml'] = tree.find('pomucka').attrib['cas-vytvoreni']
+out['snimky_zaklad'] = 'http://images.archives.cz/mrimage/matriky/proxy/'
 out['pocet'] = 0
 out['matriky'] = []
 
@@ -203,9 +182,9 @@ for ch in data:
                                     if polozka2 != None:
                                         obec['varianty'].append(polozka2.text)
                     if obec['typ'] == 'obec':
-                        obec['poloha'] = find(ruian_obce,obec['umisteni']['obec'])
+                        obec['ruian'] = find(ruian_obce,obec['umisteni']['obec'])
                     elif obec['typ'] == 'castObce':
-                        obec['poloha'] = find(ruian_castiObci, obec['umisteni']['cast_obce'] ) 
+                        obec['ruian'] = find(ruian_castiObci, obec['umisteni']['cast_obce'] ) 
 
 
 
@@ -216,7 +195,7 @@ for ch in data:
             for p in prilohy:
                 #print(p)
                 snimek = {}
-                snimek['url'] = 'http://images.archives.cz/mrimage/matriky/proxy/'+p.attrib['rel-uri']
+                snimek['url'] = p.attrib['rel-uri']
                 attributes = p.findall('info/pole')
                 for a in attributes:
                     if a.attrib['nazev'] == 'uid':
