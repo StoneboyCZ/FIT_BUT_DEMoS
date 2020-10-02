@@ -14,7 +14,7 @@ page = 'http://vademecum.soalitomerice.cz'
 
 from requests.adapters import HTTPAdapter
 cookies = dict(
-    JSESSIONID='1111EF3ADF4F6E00D5C34784AF19E3D2'
+    JSESSIONID='56885677C07E478263EFAE812B51418E'
 )
 
 s = requests.Session()
@@ -66,8 +66,11 @@ for f in os.listdir(dn):
 
                     for im in imgs:
                         sp = im.split('/')
-                        n = base+sp[8]+'/'+sp[9]+'/'+sp[10]+'/'+sp[11]+'/'+sp[12]+'/'+sp[13]
-                        snimky['url'].append(n)        
+                        #n = base+sp[8]+'/'+sp[9]+'/'+sp[10]+'/'+sp[11]+'/'+sp[12]+'/'+sp[13]
+                        n = sp[8]+'/'+sp[9]+'/'+sp[10]+'/'+sp[11]+'/'+sp[12]+'/'+sp[13]
+                        snimek = {}
+                        snimek['url'] = n
+                        snimky['url'].append(snimek)        
 
                     # when all images from the predownloaded HTML are proccessed, get the next one
                     ni = np * i + 1
@@ -81,76 +84,4 @@ for f in os.listdir(dn):
     else:
         print(f'Skipping {f}')
 
-    """
-    if not os.path.isdir(path):
-        with open(path, "r",encoding="utf-8") as f:
-            #print(dn)
-            #print(e)
-            #print(ddn)
-            # get the number of images
-            # read the content of image html file
-            content = f.read()
-
-            # get the overall number of images
-            n = int(re.findall(r'<div class="pageNum">[^|]+\|.([\d]*)',content)[0])    
-            
-            # how many pages do we have to download?
-            np = int(re.findall(r'<div class="pageNum">[^-]*-\s*([\d]*)',content)[0])
-            p = int(n / np)
-            
-            # image base adress
-            base='http://images.soalitomerice.cz/mrimage/matriky/proxy/cz/archives/'
-
-            with open(dn+'/'+ddn+'/'+'snimky.json','w',encoding='utf-8') as f:
-                snimky = {}
-                jm = re.findall(r'<a class="text headline" .*?(?=title)title="([^"]*)',content)[0]
-                jm = jm.replace(' • ','_')
-                jm = jm.replace('. ','_')
-                jm = jm.replace('/','_')
-                jm = jm.replace(' - ','-')
-                jm = jm.replace(' ','_')
-                snimky['jmeno'] = jm
-                snimky['url'] = []
-
-                for i in range(1,p+1,1):
-                    print(p)
-                    # image adresses
-                    imgs = re.findall(r'<img src=\'.*?(?=nahled_maly)',content)
-                    for im in imgs:
-                        sp = im.split('/')
-                        n = base+sp[8]+'/'+sp[9]+'/'+sp[10]+'/'+sp[11]+'/'+sp[12]+'/'+sp[13]
-                        snimky['url'].append(n)
-
-                    # when all adresses are processed and downloaded, download the next page
-                    ni = np * i + 1
-                    perm = re.findall(r'<a class="text headline" href="([^"]*)',content)[0]
-                    url = perm+'&scan='+str(ni)                 
-                    r = s.get(url,cookies=cookies)
-                    content = r.text
-            
-                json.dump(snimky,f)
-
-            #url = re.findall(r'<div class="pageNum">[^|]+\|.([\d]*)',content)[0]        
-            perm = re.findall(r'<a class="text headline" href="([^"]*)',content)[0]
-            p = os.path.join(dn,ddn)
-            print(p)
-            for i in range(1,n+1,1):
-                fn=f'{i:03d}.html'
-                
-                if i==1:
-                    with open(p+'/'+fn,'w',encoding='utf-8') as ff:
-                        ff.write(content)
-                else:
-                    print(url)
-                    r = s.get(url,cookies=cookies)
-
-                    content = r.text
-                    
-                    with open(p+'/'+fn,'w',encoding='utf-8') as ff:
-                        ff.write(content)
-                
-                ii = i+1
-                url = perm+'&scan='+str(ii)
-            """    
-                                
 

@@ -11,7 +11,7 @@ page = 'http://katalog.ahmp.cz'
 
 from requests.adapters import HTTPAdapter
 cookies = dict(
-    JSESSIONID='0AE4D5C9C02487121F22C8B2DF3A7BDC'
+    JSESSIONID='4E87E363D437412747BFD93735174696'
 )
 
 s = requests.Session()
@@ -63,8 +63,11 @@ for f in os.listdir(dn):
 
                     for im in imgs:
                         sp = im.split('/')
-                        n = base+sp[8]+'/'+sp[9]+'/'+sp[10]+'/'+sp[11]+'/'+sp[12]+'/'+sp[13]
-                        snimky['url'].append(n)        
+                        #n = base+sp[8]+'/'+sp[9]+'/'+sp[10]+'/'+sp[11]+'/'+sp[12]+'/'+sp[13]
+                        snimek = {}
+                        n = sp[8]+'/'+sp[9]+'/'+sp[10]+'/'+sp[11]+'/'+sp[12]+'/'+sp[13]
+                        snimek['url'] = n
+                        snimky['url'].append(snimek)        
 
                     # when all images from the predownloaded HTML are proccessed, get the next one
                     ni = np * i + 1

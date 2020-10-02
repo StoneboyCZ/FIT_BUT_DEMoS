@@ -7,6 +7,7 @@
 import requests 
 import re
 import os
+import datetime
 
 page = 'http://www.portafontium.eu'
 
@@ -28,7 +29,6 @@ url = 'http://portafontium.eu/searching/register?field_archives=213000010&search
 #numberOfEntries = int(matches[0].strip().replace(' ',''))
 numberOfPages = 323
 #numberOfEntries = 12712  
-
 
 
 index = 0 # html index to download
@@ -73,3 +73,9 @@ for p in range(1, numberOfPages+1,1):
         
 
     url = 'http://www.portafontium.eu/searching/register?search_api_aggregation_2=&field_doc_place_field_doc_place_name=&search_api_views_fulltext=&search_api_aggregation_3=&field_doc_dates_field_doc_dates_from=&field_register_type%5B0%5D=register-birth&field_register_type%5B1%5D=register-marriage&field_register_type%5B2%5D=register-death&field_register_type%5B3%5D=index-birth&field_register_type%5B4%5D=index-marriage&field_register_type%5B5%5D=index-death&field_archives=213000010&page='+str(p)
+
+
+with open('info.json','w',encoding='utf-8') as f:
+    info = {}
+    info['downloaded'] = str(datetime.datetime.now())
+    json.dump(info,f,ensure_ascii=False)

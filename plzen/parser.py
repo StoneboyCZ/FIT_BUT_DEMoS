@@ -12,6 +12,23 @@ import os
 import json
 import datetime
 
+def loadJSON(fn):
+    with open(fn, 'r', encoding='utf-8') as f:
+        data = json.load(f)  
+
+        return data 
+
+def findInRUIAN(m,data):
+    for d in data:
+        #print(f"{d}:{data['data'][d]}")
+        if d['nazev'] == m:
+            return d
+    
+    return None 
+
+obce = loadJSON('ruian/obce.json')
+castiObci = loadJSON('ruian/castiObci.json')
+
 
 dn = 'html'
 files = [f for f in os.listdir(dn) if os.path.isfile(os.path.join(dn,f))]
@@ -19,20 +36,15 @@ numberOfEntries = len(files)
 
 print(numberOfEntries)
 
-datetime_object = datetime.datetime.now()
 data = {}
 data['zdroj'] = 'plzen'
-data['vytvoreno'] = str(datetime_object)
+data['vytvoreno'] = str(datetime.datetime.now())
+data['stazeno'] = loadJSON('info.json')['downloaded']
 data['pocet'] = 0
-
+data['snimky_zaklad'] = 'http://www.portafontium.eu'
 data['matriky'] = []
  
 with open("plzen.json", 'w',encoding="utf-8") as f:
-    #f.write("""{
-    #"zdroj": "opava",
-    #"matriky": [""")
-
-    #for pn in range(1,3):
     for pn in range(1,numberOfEntries+1,1):
         # load a file
         fn = './'+dn+f'/{pn:05d}.html'
@@ -114,8 +126,9 @@ with open("plzen.json", 'w',encoding="utf-8") as f:
             snimky['url'] = []
             for s in snimkyList:
                 s = s.replace('wid=100','wid=2000')
-                snimky['url'].append('http://www.portafontium.eu'+s)    
-
+                snimek = {}
+                snimek['url'] = s
+                snimky['url'].append(snimek)    
 
             book['snimky'] = snimky
         

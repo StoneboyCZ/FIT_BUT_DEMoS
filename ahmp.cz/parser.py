@@ -1,12 +1,3 @@
-# http://docs.python-requests.org/en/master/user/quickstart/#cookies
-# http://docs.python-requests.org/en/master/user/install/#install
-# http://images.archives.cz/mrimage/matriky/proxy/cz/archives/CZ-217000010/NAD-165/dao/images/0345/8b1ef2b1-eba4-4b55-805d-f79d56afada0.jpg
-# http://digi.archives.cz/da/Zoomify.action?entityRef=%28%5En%29%28%28%28localArchiv%2C%5En%2Chot_%29%28unidata%29%29%28338508%29%29&scanIndex=0
-
-# I-N_I-Z_I-O_inv_c_124a_sig_Op_VII_13_1789-1799_Katerinky_025.jpg
-
-# <tr class="propojLok">\s*<[^>]*>([^<]*).*\s*</tr>\s*<tr>\s*.*?(?=va)[^>]*>(.*?)(?=</td)
-
 # http://images.ahmp.cz/mrimage/ahmp/proxy/cz/archives/CZ-321100010/NAD-156/dao/images/0060/8f8491b495f7b49d4b69e2c4ecef862f.jpg
 
 import re
@@ -14,6 +5,21 @@ import os
 import datetime
 
 import json
+
+def loadJSON(fn):
+    with open(fn, 'r', encoding='utf-8') as f:
+        data = json.load(f)  
+
+        return data 
+
+def findInRUIAN(m,data):
+    for d in data:
+        #print(f"{d}:{data['data'][d]}")
+        if d['nazev'] == m:
+            return d
+    
+    return None 
+
 
 dn = 'html'
 files = [f for f in os.listdir(dn) if os.path.isfile(os.path.join(dn,f))]
@@ -23,6 +29,8 @@ print(numberOfEntries)
 data = {}
 data['zdroj'] = 'abmp'
 data['vytvoreno'] = str(datetime.datetime.now())
+data['stazeno'] = loadJSON('info.json')['downloaded']
+data['snimky_zaklad'] = 'http://images.ahmp.cz/mrimage/ahmp/proxy/cz/archives/'
 data['pocet'] = 0
 data['matriky'] = []
  
@@ -34,6 +42,8 @@ with open("abmp.json", 'w',encoding="utf-8") as f:
         htmlFile = open(fn, 'r',encoding='utf-8')
         content = htmlFile.read()
         
+        data['pocet'] += 1
+
         book = {}
 
         # obtain the information from the page

@@ -31,7 +31,7 @@ def getPage(s,url):
 
 from requests.adapters import HTTPAdapter
 cookies = dict(
-    JSESSIONID='0AE4D5C9C02487121F22C8B2DF3A7BDC'
+    JSESSIONID='36816287E512CF9B5F5019DB5048351B'
 )
 
 # creates a random number
@@ -46,7 +46,7 @@ s.mount('http://katalog.ahmp.cz', HTTPAdapter(max_retries=20))
 # url to get -- TODO: first parameter of the script
 lastDownloadedPage = 0
 
-url = 'http://katalog.ahmp.cz/pragapublica/VysledekBean.action?show=&_sourcePage=9fjqriTgqw888813s2IsQZJKFaPrh8264Ej9H8jdZdEpRjFcQZ8wXm74BO18vnlv-y0KU8UGNv3vL6rrhq3OJHUWlfDadAppsm4r_N2IO2E%3D&row'+str(lastDownloadedPage)
+url = 'http://katalog.ahmp.cz/pragapublica/VysledekBean.action?show=&_sourcePage=_m5i9MMS5Qeq4LBh8Ax9LPJeQp_i01p3VgKlwdUkDvXwrxLVo4h1g32J8epRSdHu1pyX4NgvTpuByTxd1uFIWKyG2HG-PyU-MHhvhm0n1NE%3D&row='+str(lastDownloadedPage)
 
 # download the webpage 
 content = getPage(s,url)
@@ -77,7 +77,7 @@ if not len(files) == numberOfEntries: # not all HTMLs are downloaded
             print(fn)
             with open(fn,'w',encoding="utf-8") as f:
                 if lastDownloadedPage != 0:
-                    url = 'http://katalog.ahmp.cz/pragapublica/VysledekBean.action?show=&_sourcePage=9fjqriTgqw888813s2IsQZJKFaPrh8264Ej9H8jdZdEpRjFcQZ8wXm74BO18vnlv-y0KU8UGNv3vL6rrhq3OJHUWlfDadAppsm4r_N2IO2E%3D&row'+str(lastDownloadedPage)
+                    url = 'http://katalog.ahmp.cz/pragapublica/PaginatorResult.action?_sourcePage=DBnkT4P7U3DWKb2f2d4NMPL0awj8Si7jeCS2eobtPU_4LxxDfwC1CKJzhkTcMEEFjNISZgsfiHTCacrabfeLNwzrXN4js9XTC-Qb-lC6n_M%3D&row='+str(lastDownloadedPage)
                     content = getPage(s,url)
                     lastDownloadedPage = 0
             

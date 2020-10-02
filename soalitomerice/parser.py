@@ -1,35 +1,40 @@
-# http://docs.python-requests.org/en/master/user/quickstart/#cookies
-# http://docs.python-requests.org/en/master/user/install/#install
-# http://images.archives.cz/mrimage/matriky/proxy/cz/archives/CZ-217000010/NAD-165/dao/images/0345/8b1ef2b1-eba4-4b55-805d-f79d56afada0.jpg
-# http://digi.archives.cz/da/Zoomify.action?entityRef=%28%5En%29%28%28%28localArchiv%2C%5En%2Chot_%29%28unidata%29%29%28338508%29%29&scanIndex=0
-
-# I-N_I-Z_I-O_inv_c_124a_sig_Op_VII_13_1789-1799_Katerinky_025.jpg
-
-# <tr class="propojLok">\s*<[^>]*>([^<]*).*\s*</tr>\s*<tr>\s*.*?(?=va)[^>]*>(.*?)(?=</td)
-
-import random
-import time
 import re
 import os
-import math
-import html
 import json
+import datetime
+
+
+def loadJSON(fn):
+    with open(fn, 'r', encoding='utf-8') as f:
+        data = json.load(f)  
+
+        return data 
+
+def findInRUIAN(m,data):
+    for d in data:
+        #print(f"{d}:{data['data'][d]}")
+        if d['nazev'] == m:
+            return d
+    
+    return None 
+
+
+obce = loadJSON('ruian/obce.json')
+castiObci = loadJSON('ruian/castiObci.json')
 
 dn = 'html'
 files = [f for f in os.listdir(dn) if os.path.isfile(os.path.join(dn,f))]
 numberOfEntries = len(files)
 
-print(numberOfEntries)
 data = {}
 data['zdroj'] = 'litomerice'
+data['pocet'] = 0
+data['snimky_zaklad'] = 'http://images.soalitomerice.cz/mrimage/matriky/proxy/cz/archives/'
+data['vytvoreno'] = str(datetime.datetime.now())
+data['stazeno'] = loadJSON('info.json')['downloaded']
 data['matriky'] = []
  
 with open("litomerice.json", 'w',encoding="utf-8") as f:
-    #f.write("""{
-    #"zdroj": "opava",
-    #"matriky": [""")
-
-    #for pn in range(1,3):
     for pn in range(1,numberOfEntries+1,1):
         # load a file
         fn = './'+dn+f'/{pn:05d}.html'
@@ -37,6 +42,8 @@ with open("litomerice.json", 'w',encoding="utf-8") as f:
         htmlFile = open(fn, 'r',encoding='utf-8')
         content = htmlFile.read()
         
+        data['pocet'] += 1
+
         book = {}
 
         # obtain the information from the page
@@ -140,7 +147,11 @@ with open("litomerice.json", 'w',encoding="utf-8") as f:
             umisteni['cast_obce'] = misto[4]
             umisteni['samota'] = misto[5]  
             
-            obec['umisteni'] = umisteni 
+            obec['umisteni'] = umisteni
+
+            # find in ruian
+            obec['ruian'] = findInRUIAN(umisteni['cast_obce'],castiObci)
+
             book['obce'].append(obec)
 
         # snimky
