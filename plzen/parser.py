@@ -57,6 +57,7 @@ with open("plzen.json", 'w',encoding="utf-8") as f:
         # obtain the information from the page
         puvodce = re.findall(r'Původce.*?(?="field-item )[^>]*>([^<]*)',content)
         signatura = re.findall(r'Signatura.*?(?="field-item )[^>]*>([^<]*)',content)
+        mista = re.findall(r'Místo:.*(?=even")even">([^<]*)',content)
         #typMatriky = re.findall(r'Sbírka matrik západních Čech.*?(?=">)">([^<]*)',content)
         jazyk = re.findall(r'div class=\"labelFloat\">Jazyk:[^>]*[^<]*[^>]*>([^<]*)',content)
         obsahSvazku = re.findall(r'<span class="fieldset-legend">Datace.*?(?="field-item )[^>]*>([^<]*)',content)
@@ -76,6 +77,87 @@ with open("plzen.json", 'w',encoding="utf-8") as f:
                 book['jazyky'] = jazyk[0]
         
         book['puvodce'] = puvodce[0]
+
+        
+        book['obce'] = {}
+        
+        obce = []
+        state = 'outBracket'
+        jmeno = ''
+        varianta = ''
+        varianty = []
+        #print(f'{len(mista[0])}')
+        for i,m in enumerate(mista[0]):
+            #print(f'{m} {state} {i}')
+            if m == '(':
+                state = 'beginBracket'
+            
+            if state == 'outBracket':
+                if m == ',': 
+                    obec = {}
+                    obec['jmeno'] = jmeno
+                    obec['varianty'] = varianty
+                    obce.append(obec)
+                    jmeno = ''
+                    varianty = []
+                elif m == ')':
+                    continue
+                else:
+                    jmeno = jmeno + m
+
+            
+            if state == 'beginBracket':
+                if m == ',':
+                    #print('append')
+                    varianty.append(varianta)
+                if m == ')':
+                    #print('append')
+                    varianty.append(varianta)
+                    state = 'outBracket'
+                elif m == '(':
+                    varianta = ''
+                else:
+                    varianta = varianta + m
+        
+            if i==len(mista[0])-1:
+                obec = {}
+                obec['jmeno'] = jmeno
+                obec['varianty'] = varianty
+                obce.append(obec)
+                jmeno = ''
+                varianty = []    
+
+        print(obce)
+
+
+
+        #for o in ob:
+        #    o = o.strip()
+            
+            #print(o)
+            #reg = re.findall(r'([^\(]*).*=?\((.*)',o)
+            #print(reg[0])
+            #o = o.split(' (')
+            #print(o)
+            
+        """
+        reg = re.findall(r'([\S]*)',o)
+        print(reg)
+        for i, r in enumerate(reg):
+            if i == 0:
+                book['obce'][reg[0]] = {}
+            elif i==1:
+                book['obce'][reg[0]]['varianty'] = []    
+                book['obce'][reg[0]]['varianty'].append(reg[i])
+            else:
+                book['obce'][reg[0]]['varianty'].append(reg[i])
+        
+        book['obce'][reg[0]]['ruian'] = None
+        book['obce'][reg[0]]['ruian'] = findInRUIAN(reg[0],obce)
+        if book['obce'][reg[0]]['ruian'] == None:
+            book['obce'][reg[0]]['ruian'] = findInRUIAN(reg[0],castiObci)    
+        """
+        
 
         obsah = {}
         if obsahSvazku:
