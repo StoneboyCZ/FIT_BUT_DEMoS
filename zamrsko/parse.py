@@ -1,18 +1,35 @@
 import json
 import re
 import os
+import datetime
 
 # 87 + 535
 
-settings = {}
-settings['inputFileName'] = 'input.txt'
+def loadJSON(fn):
+    with open(fn, 'r', encoding='utf-8') as f:
+        data = json.load(f)  
 
+        return data 
+
+def findInRUIAN(m,data):
+    for d in data:
+        #print(f"{d}:{data['data'][d]}")
+        if d['nazev'] == m:
+            return d
+    
+    return None 
+
+obceRUIAN = loadJSON('ruian/obce.json')
+castiObciRUIAN = loadJSON('ruian/castiObci.json')
 
 data = {}
-data['zdroj'] = 'zamrsk'
+data['zdroj'] = 'zamrsko'
+data['vytvoreno'] = str(datetime.datetime.now())
+data['stazeno'] = '2020-08-18'
+data['pocet'] = 0
 data['matriky'] = []
 
-with open(settings['inputFileName'],'r',encoding='utf-8') as f:
+with open('input.txt','r',encoding='utf-8') as f:
     content = f.read()
     fixed1 = re.sub(r'farní úřad',r'______\nfarní úřad',content)
     fixed2 = re.sub(r'stavovský úřad',r'______\nstavovský úřad',fixed1)
@@ -106,6 +123,7 @@ with open(settings['inputFileName'],'r',encoding='utf-8') as f:
             
             matrika['obce'] = obce
 
+            data['pocet'] = data['pocet'] + 1
             data['matriky'].append(matrika)
 
 with open('zamrsk.json','w',encoding='utf-8') as f:

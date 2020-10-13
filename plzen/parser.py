@@ -26,8 +26,8 @@ def findInRUIAN(m,data):
     
     return None 
 
-obce = loadJSON('ruian/obce.json')
-castiObci = loadJSON('ruian/castiObci.json')
+obceRUIAN = loadJSON('ruian/obce.json')
+castiObciRUIAN = loadJSON('ruian/castiObci.json')
 
 
 dn = 'html'
@@ -79,55 +79,64 @@ with open("plzen.json", 'w',encoding="utf-8") as f:
         book['puvodce'] = puvodce[0]
 
         
-        book['obce'] = {}
         
-        obce = []
-        state = 'outBracket'
-        jmeno = ''
-        varianta = ''
-        varianty = []
-        #print(f'{len(mista[0])}')
-        for i,m in enumerate(mista[0]):
-            #print(f'{m} {state} {i}')
-            if m == '(':
-                state = 'beginBracket'
+        
+        if len(mista) > 0:
+            book['obce'] = {}
+            obce = {}
+            state = 'outBracket'
+            jmeno = ''
+            varianta = ''
+            varianty = []
             
-            if state == 'outBracket':
-                if m == ',': 
-                    obec = {}
-                    obec['jmeno'] = jmeno
-                    obec['varianty'] = varianty
-                    obce.append(obec)
+            for i,m in enumerate(mista[0]):
+                #print(f'{m} {state} {i}')
+                if m == '(':
+                    state = 'beginBracket'
+                
+                if state == 'outBracket':
+                    if m == ',': 
+                        jmeno=jmeno.strip()
+                        obce[jmeno] = {}
+                        obce[jmeno]['varianty'] = varianty
+                        obce[jmeno]['ruian'] = None
+                        obce[jmeno]['ruian'] = findInRUIAN(jmeno, obceRUIAN)
+                        if obce[jmeno]['ruian'] == None:
+                            obce[jmeno]['ruian'] = findInRUIAN(jmeno, castiObciRUIAN)    
+                        jmeno = ''
+                        varianty = []
+                    elif m == ')':
+                        continue
+                    else:
+                        jmeno = jmeno + m
+
+                
+                if state == 'beginBracket':
+                    if m == ',':
+                        #print('append')
+                        varianty.append(varianta)
+                    if m == ')':
+                        #print('append')
+                        varianty.append(varianta)
+                        state = 'outBracket'
+                    elif m == '(':
+                        varianta = ''
+                    else:
+                        varianta = varianta + m
+            
+                if i==len(mista[0])-1:
+                    jmeno = jmeno.strip()
+                    obce[jmeno] = {}
+                    obce[jmeno]['varianty'] = varianty
+                    obce[jmeno]['ruian'] = None
+                    obce[jmeno]['ruian'] = findInRUIAN(jmeno, obceRUIAN)
+                    if obce[jmeno]['ruian'] == None:
+                        obce[jmeno]['ruian'] = findInRUIAN(jmeno, castiObciRUIAN)  
                     jmeno = ''
-                    varianty = []
-                elif m == ')':
-                    continue
-                else:
-                    jmeno = jmeno + m
-
+                    varianty = []    
             
-            if state == 'beginBracket':
-                if m == ',':
-                    #print('append')
-                    varianty.append(varianta)
-                if m == ')':
-                    #print('append')
-                    varianty.append(varianta)
-                    state = 'outBracket'
-                elif m == '(':
-                    varianta = ''
-                else:
-                    varianta = varianta + m
+            book['obce'] = obce
         
-            if i==len(mista[0])-1:
-                obec = {}
-                obec['jmeno'] = jmeno
-                obec['varianty'] = varianty
-                obce.append(obec)
-                jmeno = ''
-                varianty = []    
-
-        print(obce)
 
 
 
